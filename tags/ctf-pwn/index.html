@@ -1,0 +1,393 @@
+
+<!DOCTYPE html>
+<html lang="null">
+    
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="MarsBlog">
+    <title>Tag : ctf pwn - MarsBlog</title>
+    <meta name="author" content="Mars Huang">
+    
+    
+    <meta name="description">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="MarsBlog">
+<meta property="og:url" content="/tags/ctf-pwn/index.html">
+<meta property="og:site_name" content="MarsBlog">
+<meta property="og:description">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MarsBlog">
+<meta name="twitter:description">
+    
+    
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/style.min.css" type="text/css">
+    <!--STYLES END-->
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <header id="header" data-behavior="2">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <h1 class="header-title">
+        <a class="header-title-link" href="/ ">MarsBlog</a>
+    </h1>
+    
+</header>
+            <nav id="sidebar" data-behavior="2">
+    
+    
+        <ul class="sidebar-buttons">
+        
+            <li class="sidebar-button">
+                
+                    <a  class="sidebar-button-link "
+                         href="/ "
+                        
+                    >
+                
+                    <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+                    <span class="sidebar-button-desc">Início</span>
+                </a>
+        </li>
+        
+            <li class="sidebar-button">
+                
+                    <a  class="sidebar-button-link "
+                         href="/all-categories"
+                        
+                    >
+                
+                    <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+                    <span class="sidebar-button-desc">Categorias</span>
+                </a>
+        </li>
+        
+            <li class="sidebar-button">
+                
+                    <a  class="sidebar-button-link "
+                         href="/all-tags"
+                        
+                    >
+                
+                    <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+                    <span class="sidebar-button-desc">Tags</span>
+                </a>
+        </li>
+        
+            <li class="sidebar-button">
+                
+                    <a  class="sidebar-button-link "
+                         href="/all-archives"
+                        
+                    >
+                
+                    <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+                    <span class="sidebar-button-desc">Arquivo</span>
+                </a>
+        </li>
+        
+            <li class="sidebar-button">
+                
+                    <a  class="sidebar-button-link st-search-show-outputs"
+                         href="/#search"
+                        
+                    >
+                
+                    <i class="sidebar-button-icon fa fa-lg fa-search"></i>
+                    <span class="sidebar-button-desc">Pesquisar</span>
+                </a>
+        </li>
+        
+            <li class="sidebar-button">
+                
+                    <a  class="sidebar-button-link "
+                         href="/#about"
+                        
+                    >
+                
+                    <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+                    <span class="sidebar-button-desc">Sobre</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+        <ul class="sidebar-buttons">
+        
+    </ul>
+    
+</nav>
+
+            
+            <div id="main" data-behavior="2"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+    
+<section class="postShorten-group main-content-wrap">
+    
+        
+        
+                <article class="postShorten" itemscope itemType="http://schema.org/BlogPosting">
+        
+            <div class="postShorten-wrap">
+                <div class="postShorten-header">
+                    <h1 class="postShorten-title" itemprop="headline">
+                        
+                                <a class="link-unstyled" href="/2016/01/09/bubble-sort/">bubble-sort</a>
+                        
+                    </h1>
+                    <div class="postShorten-meta">
+    <time itemprop="datePublished" content="Sat Jan 09 2016 17:27:51 GMT+0800">
+	
+		    09/01/2016
+    	
+    </time>
+    
+</div>
+                </div>
+                <div class="postShorten-excerpt" itemprop="articleBody">
+                    
+                        <p>
+                            ###source code &amp; binaryvulvul.clibc.so
+###此題一樣先設法 overflow，嘗試一次輸入 200 個字元之後發現程式雖然異常造成無限循環但是並沒有發生 segmentatioin fault，透過 peda gdb 裡面附的 checksec 查看程式開啟哪些防護，首先介紹下 gdb 的 peda 套件
+###peda 為 Python Explo<br>
+                    
+                    
+                        
+                            <a href="/2016/01/09/bubble-sort/" class="postShorten-excerpt_link link ">Continuar leitura</a>
+                            
+                        
+                    
+                    
+                        </p>
+                    
+                </div>
+            </div>
+            
+        </article>
+    
+        
+        
+                <article class="postShorten" itemscope itemType="http://schema.org/BlogPosting">
+        
+            <div class="postShorten-wrap">
+                <div class="postShorten-header">
+                    <h1 class="postShorten-title" itemprop="headline">
+                        
+                                <a class="link-unstyled" href="/2016/01/09/Return-to-libc/">Return to libc</a>
+                        
+                    </h1>
+                    <div class="postShorten-meta">
+    <time itemprop="datePublished" content="Sat Jan 09 2016 15:35:13 GMT+0800">
+	
+		    09/01/2016
+    	
+    </time>
+    
+</div>
+                </div>
+                <div class="postShorten-excerpt" itemprop="articleBody">
+                    
+                        <p>
+                            ###source code &amp; binaryvulvul.clibc.so
+###若發現程式開了 DEP, ASLR, 而且為 dynamic link library 的時候就可以考慮使用 return to libc (因為 shellcode 無法在 stack 段執行且 gadget 數量太少很難湊出可以執行 shell 的 rop chain)
+###可以使用 ldd 指令查看<br>
+                    
+                    
+                        
+                            <a href="/2016/01/09/Return-to-libc/" class="postShorten-excerpt_link link ">Continuar leitura</a>
+                            
+                        
+                    
+                    
+                        </p>
+                    
+                </div>
+            </div>
+            
+        </article>
+    
+        
+        
+                <article class="postShorten" itemscope itemType="http://schema.org/BlogPosting">
+        
+            <div class="postShorten-wrap">
+                <div class="postShorten-header">
+                    <h1 class="postShorten-title" itemprop="headline">
+                        
+                                <a class="link-unstyled" href="/2015/11/21/Shellcode/">Shellcode</a>
+                        
+                    </h1>
+                    <div class="postShorten-meta">
+    <time itemprop="datePublished" content="Sat Nov 21 2015 12:35:59 GMT+0800">
+	
+		    21/11/2015
+    	
+    </time>
+    
+</div>
+                </div>
+                <div class="postShorten-excerpt" itemprop="articleBody">
+                    
+                        <p>
+                            ###Shellcodevulvul.c
+###shellcode 是一串可執行的 machine code，由於最常使用的功能為產生 shell 提供攻擊者操作介面而稱之，但是其實只要是這種形式的 payload 不管是否真的用來拿 shell 都可以稱為 shellcode。
+###shellcode 通常透過撰寫組合語言之後透過工具而得，直接寫高階語言也可以做得到，但是因為 compiler<br>
+                    
+                    
+                        
+                            <a href="/2015/11/21/Shellcode/" class="postShorten-excerpt_link link ">Continuar leitura</a>
+                            
+                        
+                    
+                    
+                        </p>
+                    
+                </div>
+            </div>
+            
+        </article>
+    
+        
+        
+                <article class="postShorten" itemscope itemType="http://schema.org/BlogPosting">
+        
+            <div class="postShorten-wrap">
+                <div class="postShorten-header">
+                    <h1 class="postShorten-title" itemprop="headline">
+                        
+                                <a class="link-unstyled" href="/2015/11/20/ROP-Return-Oriented-Programming/">ROP (Return Oriented Programming)</a>
+                        
+                    </h1>
+                    <div class="postShorten-meta">
+    <time itemprop="datePublished" content="Fri Nov 20 2015 01:23:53 GMT+0800">
+	
+		    20/11/2015
+    	
+    </time>
+    
+</div>
+                </div>
+                <div class="postShorten-excerpt" itemprop="articleBody">
+                    
+                        <p>
+                            ###ret2textvulvul.c
+###ROP (Return Oriented Programming) 顧名思義就是透過大量的 ret 指令來控制程式流程的攻擊方式，rop 存在的意義為繞過 DEP (可執行的區段不可寫入，可寫入的地方不可執行)，例如 .text 段為放置程式碼的區域，可以執行但是不能寫入，而 .stack 可以寫入資料但是不能執行，因此想法為透過程式本身就有的指令片段<br>
+                    
+                    
+                        
+                            <a href="/2015/11/20/ROP-Return-Oriented-Programming/" class="postShorten-excerpt_link link ">Continuar leitura</a>
+                            
+                        
+                    
+                    
+                        </p>
+                    
+                </div>
+            </div>
+            
+        </article>
+    
+        
+        
+                <article class="postShorten" itemscope itemType="http://schema.org/BlogPosting">
+        
+            <div class="postShorten-wrap">
+                <div class="postShorten-header">
+                    <h1 class="postShorten-title" itemprop="headline">
+                        
+                                <a class="link-unstyled" href="/2015/11/19/Buffer-Overflow-attack/">Buffer Overflow attack</a>
+                        
+                    </h1>
+                    <div class="postShorten-meta">
+    <time itemprop="datePublished" content="Thu Nov 19 2015 23:26:47 GMT+0800">
+	
+		    19/11/2015
+    	
+    </time>
+    
+</div>
+                </div>
+                <div class="postShorten-excerpt" itemprop="articleBody">
+                    
+                        <p>
+                            ###source code &amp; binaryvul.cvul
+###此處以 x86 linux 中的 C 語言為主
+###buffer overflow 為常見的攻擊手法之一，透過輸入大量 payload 將 main 或是 function 的 return address 覆蓋成特定值達到控制程式流程目的。
+###以 Sean 大大 &lt;(_ _)&gt; 公開於 youtube<br>
+                    
+                    
+                        
+                            <a href="/2015/11/19/Buffer-Overflow-attack/" class="postShorten-excerpt_link link ">Continuar leitura</a>
+                            
+                        
+                    
+                    
+                        </p>
+                    
+                </div>
+            </div>
+            
+        </article>
+    
+    <div class="pagination-bar">
+    <ul class="pagination">
+        
+        
+        <li class="pagination-number">página 1 de 1</li>
+    </ul>
+</div>
+
+</section>
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2016 Mars Huang. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+        </div>
+        <div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-remove"></i>
+        </div>
+        
+            <h4 id="about-card-name">Mars Huang</h4>
+        
+            <h5 id="about-card-bio"><p>author.bio</p>
+</h5>
+        
+        
+            <h5 id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>author.job</p>
+
+            </h5>
+        
+        
+    </div>
+</div>
+
+        <div id="cover" style="background-image:url('http://res.cloudinary.com/tranquilpeak-hexo-theme/image/upload/v1438975482/v1.3.0-cover.jpg');"></div>
+    </body>
+    <!--SCRIPTS-->
+<script src="/assets/js/script.min.js" type="text/javascript"></script>
+<!--SCRIPTS END-->
+
+
+
+</html>

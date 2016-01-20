@@ -1,0 +1,432 @@
+
+<!DOCTYPE html>
+<html lang="null">
+    
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="MarsBlog">
+    <title>Hexo in Github page - MarsBlog</title>
+    <meta name="author" content="Mars Huang">
+    
+    
+    <meta name="description" content="###終於下定決心要弄個 blog 紀錄學習過程了，就算是因為看了大大們都有寫自己的 blog 想要模仿一下假裝自己好像追上了一些也沒關係的，總之一切就從這篇文章開始吧！
+###從最一開始自以為要手爆程式碼到認識 wordpress，joomla 到接觸 yii，laravel framework，到現在找到這個比較簡單又不用維護 Server 又沒有什麼廣告又免費的建置工具，開心之餘心中的第一個">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="Hexo in Github page">
+<meta property="og:url" content="/2015/05/19/buildHexo/index.html">
+<meta property="og:site_name" content="MarsBlog">
+<meta property="og:description" content="###終於下定決心要弄個 blog 紀錄學習過程了，就算是因為看了大大們都有寫自己的 blog 想要模仿一下假裝自己好像追上了一些也沒關係的，總之一切就從這篇文章開始吧！
+###從最一開始自以為要手爆程式碼到認識 wordpress，joomla 到接觸 yii，laravel framework，到現在找到這個比較簡單又不用維護 Server 又沒有什麼廣告又免費的建置工具，開心之餘心中的第一個">
+<meta property="og:image" content="https://googledrive.com/host/0BzGd3Qn1ZnTeVVg3U25vMjVsX0k">
+<meta property="og:image" content="https://googledrive.com/host/0BzGd3Qn1ZnTebGZZazdsMklLVk0">
+<meta property="og:updated_time" content="2015-09-01T10:13:04.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Hexo in Github page">
+<meta name="twitter:description" content="###終於下定決心要弄個 blog 紀錄學習過程了，就算是因為看了大大們都有寫自己的 blog 想要模仿一下假裝自己好像追上了一些也沒關係的，總之一切就從這篇文章開始吧！
+###從最一開始自以為要手爆程式碼到認識 wordpress，joomla 到接觸 yii，laravel framework，到現在找到這個比較簡單又不用維護 Server 又沒有什麼廣告又免費的建置工具，開心之餘心中的第一個">
+    
+    
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/style.min.css" type="text/css">
+    <!--STYLES END-->
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <h1 class="header-title">
+        <a class="header-title-link" href="/ ">MarsBlog</a>
+    </h1>
+    
+</header>
+            <nav id="sidebar" data-behavior="4">
+    
+    
+        <ul class="sidebar-buttons">
+        
+            <li class="sidebar-button">
+                
+                    <a  class="sidebar-button-link "
+                         href="/ "
+                        
+                    >
+                
+                    <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+                    <span class="sidebar-button-desc">Início</span>
+                </a>
+        </li>
+        
+            <li class="sidebar-button">
+                
+                    <a  class="sidebar-button-link "
+                         href="/all-categories"
+                        
+                    >
+                
+                    <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+                    <span class="sidebar-button-desc">Categorias</span>
+                </a>
+        </li>
+        
+            <li class="sidebar-button">
+                
+                    <a  class="sidebar-button-link "
+                         href="/all-tags"
+                        
+                    >
+                
+                    <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+                    <span class="sidebar-button-desc">Tags</span>
+                </a>
+        </li>
+        
+            <li class="sidebar-button">
+                
+                    <a  class="sidebar-button-link "
+                         href="/all-archives"
+                        
+                    >
+                
+                    <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+                    <span class="sidebar-button-desc">Arquivo</span>
+                </a>
+        </li>
+        
+            <li class="sidebar-button">
+                
+                    <a  class="sidebar-button-link st-search-show-outputs"
+                         href="/#search"
+                        
+                    >
+                
+                    <i class="sidebar-button-icon fa fa-lg fa-search"></i>
+                    <span class="sidebar-button-desc">Pesquisar</span>
+                </a>
+        </li>
+        
+            <li class="sidebar-button">
+                
+                    <a  class="sidebar-button-link "
+                         href="/#about"
+                        
+                    >
+                
+                    <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+                    <span class="sidebar-button-desc">Sobre</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+        <ul class="sidebar-buttons">
+        
+    </ul>
+    
+</nav>
+
+            
+            <div id="main" data-behavior="4"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post" itemscope itemType="http://schema.org/BlogPosting">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title" itemprop="headline">
+            Hexo in Github page
+        </h1>
+    
+    <div class="post-meta">
+    <time itemprop="datePublished" content="Tue May 19 2015 21:08:30 GMT+0800">
+	
+		    19/05/2015
+    	
+    </time>
+    
+</div>
+</div>
+    
+    <div class="post-content markdown" itemprop="articleBody">
+        <div class="main-content-wrap">
+            <p>###終於下定決心要弄個 blog 紀錄學習過程了，就算是因為看了大大們都有寫自己的 blog 想要模仿一下假裝自己好像追上了一些也沒關係的，總之一切就從這篇文章開始吧！</p>
+<p>###從最一開始自以為要手爆程式碼到認識 wordpress，joomla 到接觸 yii，laravel framework，到現在找到這個比較簡單又不用維護 Server 又沒有什麼廣告又免費的建置工具，開心之餘心中的第一個想法是感謝這些機構提供窮人們紀錄自己的成長歷程的地方，先拜再說吧&lt;(_ _)&gt;</p>
+<p>###不負責任紀錄就此開始，拜託鞭小力一點<br><a id="more"></a><br><br></p>
+<hr>
+<p>#前置作業</p>
+<p>###總而言之言而總之，來談談 Hexo 吧</p>
+<p>###Hexo 是個強大的 blog framework，讓使用者撰寫最少的程式碼或是標籤語言建立屬於自己的 blog</p>
+<p>###目前紀錄的 Hexo 版本為 3.0.1 版，若有意參照以下環境建置過程者自行確認版本號囉</p>
+<p>###安裝 Hexo 之前需要先安裝 Node.js，</p>
+<p>###<a style="text-decoration: underline;" href="https://nodejs.org/" target="_blank" rel="external">Node.js 官網在此</a></p>
+<p>###請選擇符合您作業系統的版本，之後安裝 Hexo 會用到的~</p>
+<p>###什麼是 Node.js 呢? 我的理解上他是個把原來用於前端的 javascript 拿來建置成後端環境，至於 Node.js 和傳統 PHP + Apache 的比較請參考這篇文章</p>
+<p>###<a style="text-decoration: underline;" href="http://ithelp.ithome.com.tw/question/10095722" target="_blank" rel="external">PHP+Apache vs. Node.js大車拼</a><br><br></p>
+<p>###安裝完 Node.js 之後要來介紹一下 npm</p>
+<p>###npm 是 javascript 的套件管理器 (Node Package Manager) ，預設的使用環境是 Node.js，使用者可以透過 npm 輕鬆的安裝支援的套件，而 hexo 也能透過 npm 快速的安裝</p>
+<p>###首先開啟 node.js command prompt (Windows 環境中可在 start menu 中的 Node.js資料夾中找到他)</p>
+<p>###依照<a style="text-decoration: underline;" href="http://hexo.io/zh-tw/" target="_blank" rel="external"> Hexo 官網 </a>的指令安裝</p>
+<p>###首先安裝 hexo-cli (version 3 以上版本新增)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g hexo-cli</span><br></pre></td></tr></table></figure></p>
+<p><br></p>
+<p>###接著安裝 Hexo<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install &#8211;g hexo -&#8211;save</span><br></pre></td></tr></table></figure></p>
+<p>###完成後輸入 hexo 檢查是否成功安裝 Hexo (若出現下列參數選項即為成功)</p>
+<p><img style="width: 700px;" src="https://googledrive.com/host/0BzGd3Qn1ZnTeVVg3U25vMjVsX0k"><br><br></p>
+<p>###到目前為止已經成功的建立 Hexo 環境了，在撰寫第一篇文章之前要先建立 github web page</p>
+<p>###關於 github page 相關訊息請看下列文章</p>
+<p>###<a style="text-decoration: underline;" href="https://pages.github.com/" target="_blank" rel="external">Github.io web page</a><br><br></p>
+<p>###建立 github web page 的理由是我們現在要把 Hexo 生成的網頁樣式套用在 github 提供的免費網頁空間中，因為雖然 github 網頁也提供了預設樣式可以套用，但是 Hexo 的功能更強大，更加客製化<br><br></p>
+<p>###執行下列指令創建一個 blog</p>
+<p>###(選擇想要放置 blog 檔案的位置，我自己是習慣放在雲端硬碟的同步資料夾裡面順便備份)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo init &#34;your blog name&#34;</span><br></pre></td></tr></table></figure></p>
+<p>###利用 cd 指令進入該 blog 資料夾中後輸入下列指令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install</span><br></pre></td></tr></table></figure></p>
+<p>###如此一來這個資料夾裡面就會多出許多檔案及資料夾，這些東西就是預設生成的最基本的 blog </p>
+<p>###我們要把這些 hexo 生成的檔案同步至 github web page 上，因此我們要設定 blog 資料夾中的 _config.yml 檔案，讓本地端的 hexo 知道我們要連線的 github 是誰<br><br></p>
+<p>###首先設定 url 和 root 欄位，url 指定為你的 github web page 的網址即可，應該都是固定格式 <a href="http://&quot;account&quot;.github.io/">http://&quot;account&quot;.github.io/</a></p>
+<p>###root 欄位可以填寫 / 即可，若是網站要放在子目錄裡面 e.g.: xxx.xxx.xxx/“子目錄”，那 root 就要寫成 /“子目錄” </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">url: http://&#34;account&#34;.github.io/&#10;root: /</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<p>###接下來填寫最底下的 deploy (佈署) 欄位，此欄位用來設定 github 連線及更新網站所需資料</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">deploy:&#10;  &#9;type: git&#10;  &#9;repository: &#34;your github ssh url&#34;&#10;  &#9;branch: master</span><br></pre></td></tr></table></figure>
+<p>###在 2.x 的版本中 type 要填入 github，但是在第 3 版中改成了 git</p>
+<p><img style="width: 300px;" src="https://googledrive.com/host/0BzGd3Qn1ZnTebGZZazdsMklLVk0"></p>
+<p>###上方圖片中方框中的文字即為 ssh url，在 github 中隨便一個專案頁面裡面都可以找到他，其實 ssh 和 https 都可以使用，而兩個的差別就在 https 連線每次都要輸入密碼，這其實頗為煩人，因此建議使用 ssh 連線</p>
+<p>###暫停一下!!!，光是複製這個 ssh url 是不夠的，試想若是任何人使用這個固定格式的 url 就能連線至 github 的話未免也太不安全，其固定格式就是 git@github.com:”account”/“account”.github.io.git，要知道一個人的 github 帳號頗為容易，因此必須產生一組只適用於該機器的 ssh 公開金鑰 (public key) 給 github 供認證使用，就參考下列官方文件設置一下吧</p>
+<p>###<a style="text-decoration: underline;" href="https://help.github.com/articles/generating-ssh-keys/" target="_blank" rel="external">github ssh key 創建與設置</a></p>
+<p><br></p>
+<p>###注意!! 完成設定之後要安裝一個 plugin<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-deployer-git -&#8211;save</span><br></pre></td></tr></table></figure></p>
+<p>###從字面上的意思就知道要新增一個佈署項目 git，如果沒有安裝的話每次更新網頁就會噴錯說看不懂 git 是誰，因此務必要安裝才行~</p>
+<p><br><br><br><br><br></p>
+<p>#新增文章</p>
+<p>###折騰了這麼久，終於可以開始新增第一篇文章了，利用 cd 指令進入 blog 資料夾之後新增文章<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo new &#34;hello world&#34;</span><br></pre></td></tr></table></figure></p>
+<p>###這篇文章會被存在 blog/source/_post 裡面，文章的格式是 markdown(.md) 檔案</p>
+<p>###於是乎就產生了一篇名字為 hello world 的空白文章了，執行指令:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo s&#10;(&#24847;&#21516;&#26044; hexo server)</span><br></pre></td></tr></table></figure>
+<p>###這個指令可以啟動預覽網頁的伺服器，可以利用該功能完成文章及內容排版之後在正式上線至 github web page</p>
+<p>###執行後在瀏覽器上輸入 <a href="http://localhost:4000" target="_blank" rel="external">http://localhost:4000</a> 即可看到預覽的網站，撰寫文章的過程中只要繼續執行 hexo server 指令，儲存文章之後就能即時看見更改結果了<br><br></p>
+<p>###接著就來說一下 markdown 語言吧，markdown 和 html 一樣是個標記語言，其存在的最重要的意義就是讓懶人們少寫一點 html tag，由於 markdown 最終還是會被轉化成 html，因此在 markdown 中寫 html tag 是完全可行的，如果懶得查 markdown 的某些表示方法大可以直接寫 html</p>
+<p>###在此提供一個 Windows 下免費的 markdown 編輯器</p>
+<p>###<a style="text-decoration: underline;" href="http://markdownpad.com/" target="_blank" rel="external">MarkdownPad</a></p>
+<p>###此編輯器會即時預覽撰寫的 markdown 語法</p>
+<p>###markdown 語法<a style="text-decoration: underline;" href="http://wen00072-blog.logdown.com/posts/139116-learning-markdown-syntax" target="_blank" rel="external">請看這邊</a><br><br></p>
+<p>###文章撰寫完成後接下來就是上線啦，先根據修改產生靜態網頁<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo g&#10;(&#24847;&#21516;&#26044; hexo generate)</span><br></pre></td></tr></table></figure></p>
+<p>###佈署網頁同步至 github<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo d&#10;(&#24847;&#21516;&#26044; hexo deployer)</span><br></pre></td></tr></table></figure></p>
+<p>###如此就能在你的 github web page url 看到修改過的 blog 囉，預設的 url 應該都是 <a href="http://&quot;account&quot;.github.io">http://&quot;account&quot;.github.io</a></p>
+<p>#主題風格</p>
+<p>###hexo 提供了不少推薦的主題供使用者套用，這些主題都放在 github 上免費讓所有人下載，可以依據 blog 的形式來決定要套用的主題 (hexo 預設的主題為 landscape)</p>
+<p>###<a href="https://hexo.io/themes/" target="_blank" rel="external">hexo 主題一覽</a></p>
+<p>###從 github 上將主題下載解壓縮成目錄後放在 blog 資料夾中的 theme 資料夾<br>接著再編輯 _config.yml 檔案，將其中的 theme 參數設定為該主題的資料夾名稱即可</p>
+<p>###第一篇文章終於告個段落了，總覺得我寫得有點囉嗦，但是我認為 blog 不只是紀錄自己的學習過程，另外一方面也是提供經驗供新人學習，一路走來我也是靠著網路上有人願意分享心得才讓我小有成長，取之於網路必須有所回饋達成良性循環，單純的紀錄步驟不說明前因後果沒有什麼意義，不過是做做樣子罷了，希望接下來的文章不要再花那麼多時間啦</p>
+
+            
+                
+
+            
+        </div>
+    </div>
+    <div class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">ETIQUETADO em</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/hexo/">hexo</a>
+
+            </div>
+        
+        <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2015/05/30/defcon-babycmd/"  data-tooltip="defcon_babycmd">
+                
+                    <i class="fa fa-angle-left"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">ANTERIOR</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--disabled">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">PRÓXIMO</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions"  href="#btn-open-shareoptions">
+                <i class="fa fa-share-alt"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=/2015/05/19/buildHexo/">
+                <i class="fa fa-google-plus"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=/2015/05/19/buildHexo/">
+                <i class="fa fa-facebook-official"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=/2015/05/19/buildHexo/">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </li>
+        
+            <li class="post-action">
+                <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                    <i class="fa fa-comment-o"></i>
+                </a>
+            </li>
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#">
+            
+                <i class="fa fa-list"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2016 Mars Huang. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2015/05/30/defcon-babycmd/"  data-tooltip="defcon_babycmd">
+                
+                    <i class="fa fa-angle-left"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">ANTERIOR</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--disabled">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">PRÓXIMO</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions"  href="#btn-open-shareoptions">
+                <i class="fa fa-share-alt"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=/2015/05/19/buildHexo/">
+                <i class="fa fa-google-plus"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=/2015/05/19/buildHexo/">
+                <i class="fa fa-facebook-official"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=/2015/05/19/buildHexo/">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </li>
+        
+            <li class="post-action">
+                <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                    <i class="fa fa-comment-o"></i>
+                </a>
+            </li>
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#">
+            
+                <i class="fa fa-list"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+    <ul class="share-options">
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=/2015/05/19/buildHexo/">
+                <i class="fa fa-google-plus"></i><span class="">Share on Google Plus</span>
+            </a>
+        </li>
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=/2015/05/19/buildHexo/">
+                <i class="fa fa-facebook-official"></i><span>Share on Facebook</span>
+            </a>
+        </li>
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=/2015/05/19/buildHexo/">
+                <i class="fa fa-twitter"></i><span>Share on Twitter</span>
+            </a>
+        </li>
+    </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+            
+        </div>
+        <div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-remove"></i>
+        </div>
+        
+            <h4 id="about-card-name">Mars Huang</h4>
+        
+            <h5 id="about-card-bio"><p>author.bio</p>
+</h5>
+        
+        
+            <h5 id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>author.job</p>
+
+            </h5>
+        
+        
+    </div>
+</div>
+
+        <div id="cover" style="background-image:url('http://res.cloudinary.com/tranquilpeak-hexo-theme/image/upload/v1438975482/v1.3.0-cover.jpg');"></div>
+    </body>
+    <!--SCRIPTS-->
+<script src="/assets/js/script.min.js" type="text/javascript"></script>
+<!--SCRIPTS END-->
+
+
+
+</html>

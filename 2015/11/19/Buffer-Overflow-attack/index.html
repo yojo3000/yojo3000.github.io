@@ -1,0 +1,393 @@
+
+<!DOCTYPE html>
+<html lang="null">
+    
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="MarsBlog">
+    <title>Buffer Overflow attack - MarsBlog</title>
+    <meta name="author" content="Mars Huang">
+    
+    
+    <meta name="description" content="###source code &amp;amp; binaryvul.cvul
+###此處以 x86 linux 中的 C 語言為主
+###buffer overflow 為常見的攻擊手法之一，透過輸入大量 payload 將 main 或是 function 的 return address 覆蓋成特定值達到控制程式流程目的。
+###以 Sean 大大 &amp;lt;(_ _)&amp;gt; 公開於 youtube">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="Buffer Overflow attack">
+<meta property="og:url" content="/2015/11/19/Buffer-Overflow-attack/index.html">
+<meta property="og:site_name" content="MarsBlog">
+<meta property="og:description" content="###source code &amp;amp; binaryvul.cvul
+###此處以 x86 linux 中的 C 語言為主
+###buffer overflow 為常見的攻擊手法之一，透過輸入大量 payload 將 main 或是 function 的 return address 覆蓋成特定值達到控制程式流程目的。
+###以 Sean 大大 &amp;lt;(_ _)&amp;gt; 公開於 youtube">
+<meta property="og:image" content="https://googledrive.com/host/0BzGd3Qn1ZnTeQnlnZ01ET2NhdjQ">
+<meta property="og:image" content="https://googledrive.com/host/0BzGd3Qn1ZnTeb0VPSnZXTTRNQjg">
+<meta property="og:updated_time" content="2015-11-19T16:47:53.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Buffer Overflow attack">
+<meta name="twitter:description" content="###source code &amp;amp; binaryvul.cvul
+###此處以 x86 linux 中的 C 語言為主
+###buffer overflow 為常見的攻擊手法之一，透過輸入大量 payload 將 main 或是 function 的 return address 覆蓋成特定值達到控制程式流程目的。
+###以 Sean 大大 &amp;lt;(_ _)&amp;gt; 公開於 youtube">
+    
+    
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/style.min.css" type="text/css">
+    <!--STYLES END-->
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <h1 class="header-title">
+        <a class="header-title-link" href="/ ">MarsBlog</a>
+    </h1>
+    
+</header>
+            <nav id="sidebar" data-behavior="4">
+    
+    
+        <ul class="sidebar-buttons">
+        
+            <li class="sidebar-button">
+                
+                    <a  class="sidebar-button-link "
+                         href="/ "
+                        
+                    >
+                
+                    <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+                    <span class="sidebar-button-desc">Início</span>
+                </a>
+        </li>
+        
+            <li class="sidebar-button">
+                
+                    <a  class="sidebar-button-link "
+                         href="/all-categories"
+                        
+                    >
+                
+                    <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+                    <span class="sidebar-button-desc">Categorias</span>
+                </a>
+        </li>
+        
+            <li class="sidebar-button">
+                
+                    <a  class="sidebar-button-link "
+                         href="/all-tags"
+                        
+                    >
+                
+                    <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+                    <span class="sidebar-button-desc">Tags</span>
+                </a>
+        </li>
+        
+            <li class="sidebar-button">
+                
+                    <a  class="sidebar-button-link "
+                         href="/all-archives"
+                        
+                    >
+                
+                    <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+                    <span class="sidebar-button-desc">Arquivo</span>
+                </a>
+        </li>
+        
+            <li class="sidebar-button">
+                
+                    <a  class="sidebar-button-link st-search-show-outputs"
+                         href="/#search"
+                        
+                    >
+                
+                    <i class="sidebar-button-icon fa fa-lg fa-search"></i>
+                    <span class="sidebar-button-desc">Pesquisar</span>
+                </a>
+        </li>
+        
+            <li class="sidebar-button">
+                
+                    <a  class="sidebar-button-link "
+                         href="/#about"
+                        
+                    >
+                
+                    <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+                    <span class="sidebar-button-desc">Sobre</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+        <ul class="sidebar-buttons">
+        
+    </ul>
+    
+</nav>
+
+            
+            <div id="main" data-behavior="4"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post" itemscope itemType="http://schema.org/BlogPosting">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title" itemprop="headline">
+            Buffer Overflow attack
+        </h1>
+    
+    <div class="post-meta">
+    <time itemprop="datePublished" content="Thu Nov 19 2015 23:26:47 GMT+0800">
+	
+		    19/11/2015
+    	
+    </time>
+    
+</div>
+</div>
+    
+    <div class="post-content markdown" itemprop="articleBody">
+        <div class="main-content-wrap">
+            <p>###source code &amp; binary<br><a href="https://drive.google.com/open?id=0BzGd3Qn1ZnTeU0pUQktCYmhvZzA" target="_blank" rel="external">vul.c</a><br><a href="https://drive.google.com/open?id=0BzGd3Qn1ZnTeQzVZSkRta2c3TDA" target="_blank" rel="external">vul</a></p>
+<p>###此處以 x86 linux 中的 C 語言為主</p>
+<p>###buffer overflow 為常見的攻擊手法之一，透過輸入大量 payload 將 main 或是 function 的 return address 覆蓋成特定值達到控制程式流程目的。</p>
+<p>###以 Sean 大大 &lt;(_ _)&gt; 公開於 youtube 中的影片為例子做記錄 <br>(非常感謝他願意不藏私的公開教學影片)</p>
+<p>###在講 buffer overflow 之前得先提提 calling convention 中 stack frame 的概念，stack frame 為 x86 系統中在 call function 的時候替 function 準備的 address space，詳細結構如下圖:</p>
+<p><img style="width: 700px;" src="https://googledrive.com/host/0BzGd3Qn1ZnTeQnlnZ01ET2NhdjQ"></p>
+<p>###圖片下方為 high memory address，上方為 low memory address，圖中一整個綠色區塊為 stack frame，stack frame 的建立方式大致上有這些步驟:</p>
+<p>###在 caller call function 之前程式會先準備 callee function 需要的參數 (parameter) 及 push return address 至 stack，這些都完成了之後才真正 call function 跳至 callee function 的位置</p>
+<p>###然後執行 function prologue 將 caller 的         ebp 位置備份起來(saved ebp) 且替 local variable 準備放置空間，因此若是程式提供輸入，並且沒有檢查輸入值和程式提供的 buffer 長度就可能被送入長段 payload 覆蓋其他記憶體位置</p>
+<p>###以 stack overflow 為例:</p>
+<p>###vul.c</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#include &#60;stdio.h&#62;                                                             &#10;#include &#60;stdlib.h&#62;                                                              &#10;#include &#60;unistd.h&#62;&#10;&#10;int main() &#123;                                                                          &#10;  setvbuf(stdout, 0, _IONBF, 0);                                                      &#10;  srand(time(0)^getpid());                                                            &#10;  char buf[100];                                                                      &#10;  int magic = rand();                                                                 &#10;  gets(buf);       &#10;                                                                       &#10;  if (atoi(buf)==magic) &#123;                                                             &#10;    puts(&#34;Okay...&#34;);                                                                  &#10;    system(&#34;sh&#34;);                                                                     &#10;  &#125;                                                                                   &#10;&#125;</span><br></pre></td></tr></table></figure>
+<p>###程式提供了 buf[100] 當做 gets function 的 buffer 接收輸入參數，因此想法為輸入超過 100 byte 字串覆蓋掉 main 的 return address 跳至 system(“sh”) 得到 shell</p>
+<p>###透過下列指令觀看執行檔 .text 段的 code virtual memory 分布</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">objdump -d vul | less</span><br></pre></td></tr></table></figure>
+<p>###找到程式中 main 函式的位置後找尋其 ret 指令的 address</p>
+<p><img style="width: 700px;" src="https://googledrive.com/host/0BzGd3Qn1ZnTeb0VPSnZXTTRNQjg"></p>
+<p>###從上圖中看出 ret 的位置為 0x804864c，期望 payload 能覆蓋掉該值成 system 的記憶體位置拿到 shell，因此必須確定 payload 長度才能正確的覆蓋掉 ret 的位置，於是嘗試輸入超過 buffer 長度 (100) 的字串，一直到剛好不會 segmentation fault 的長度為止，表示剛剛好沒有破壞 return address 的結構而程式可以正常 return 回 caller 而不會壞掉<br>(一個字元為一個 byte，可輸入 100 個 A 來代表長度為 100 byte 的 payload)</p>
+<p>###再來 objdump 找尋 system 的記憶體位置，並且在 payload 最後面加上 <a href="http://www.prudentman.idv.tw/2007/11/big-endianlittle-endian.html" target="_blank" rel="external">little endian</a> 的 system 記憶體位置即可成功控制程式流程，程式就會在 return 的時候跳到指定的 system 位置了。</p>
+<p>###由於記憶體位置需為 hex 型態，可透過安裝好用的 linux 工具 “hexedit” 來寫入 hex 的 payload，可將程式透過 gdb 執行，並且在 ret 下中斷點來觀看當時 esp 的值來確定記憶體位置真的如自己所願改成特定位置</p>
+<p>###<a href="https://drive.google.com/open?id=0BzGd3Qn1ZnTeVG0za0Jtd2VOVjA" target="_blank" rel="external">payload範例</a></p>
+
+            
+                
+
+            
+        </div>
+    </div>
+    <div class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">ETIQUETADO em</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/ctf-pwn/">ctf pwn</a>
+
+            </div>
+        
+        <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2015/11/20/ROP-Return-Oriented-Programming/"  data-tooltip="ROP (Return Oriented Programming)">
+                
+                    <i class="fa fa-angle-left"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">ANTERIOR</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2015/09/01/Known-plaintext-Attack-on-RSA/" data-tooltip="Known-plaintext Attack on RSA">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">PRÓXIMO</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions"  href="#btn-open-shareoptions">
+                <i class="fa fa-share-alt"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=/2015/11/19/Buffer-Overflow-attack/">
+                <i class="fa fa-google-plus"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=/2015/11/19/Buffer-Overflow-attack/">
+                <i class="fa fa-facebook-official"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=/2015/11/19/Buffer-Overflow-attack/">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </li>
+        
+            <li class="post-action">
+                <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                    <i class="fa fa-comment-o"></i>
+                </a>
+            </li>
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#">
+            
+                <i class="fa fa-list"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2016 Mars Huang. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2015/11/20/ROP-Return-Oriented-Programming/"  data-tooltip="ROP (Return Oriented Programming)">
+                
+                    <i class="fa fa-angle-left"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">ANTERIOR</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2015/09/01/Known-plaintext-Attack-on-RSA/" data-tooltip="Known-plaintext Attack on RSA">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">PRÓXIMO</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions"  href="#btn-open-shareoptions">
+                <i class="fa fa-share-alt"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=/2015/11/19/Buffer-Overflow-attack/">
+                <i class="fa fa-google-plus"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=/2015/11/19/Buffer-Overflow-attack/">
+                <i class="fa fa-facebook-official"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=/2015/11/19/Buffer-Overflow-attack/">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </li>
+        
+            <li class="post-action">
+                <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                    <i class="fa fa-comment-o"></i>
+                </a>
+            </li>
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#">
+            
+                <i class="fa fa-list"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+    <ul class="share-options">
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=/2015/11/19/Buffer-Overflow-attack/">
+                <i class="fa fa-google-plus"></i><span class="">Share on Google Plus</span>
+            </a>
+        </li>
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=/2015/11/19/Buffer-Overflow-attack/">
+                <i class="fa fa-facebook-official"></i><span>Share on Facebook</span>
+            </a>
+        </li>
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=/2015/11/19/Buffer-Overflow-attack/">
+                <i class="fa fa-twitter"></i><span>Share on Twitter</span>
+            </a>
+        </li>
+    </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+            
+        </div>
+        <div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-remove"></i>
+        </div>
+        
+            <h4 id="about-card-name">Mars Huang</h4>
+        
+            <h5 id="about-card-bio"><p>author.bio</p>
+</h5>
+        
+        
+            <h5 id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>author.job</p>
+
+            </h5>
+        
+        
+    </div>
+</div>
+
+        <div id="cover" style="background-image:url('http://res.cloudinary.com/tranquilpeak-hexo-theme/image/upload/v1438975482/v1.3.0-cover.jpg');"></div>
+    </body>
+    <!--SCRIPTS-->
+<script src="/assets/js/script.min.js" type="text/javascript"></script>
+<!--SCRIPTS END-->
+
+
+
+</html>
