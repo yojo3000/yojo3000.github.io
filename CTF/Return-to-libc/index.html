@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Return to libc | Mars&#39; Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="source code &amp;amp; binaryvulvul.clibc.so 若發現程式開了 DEP, ASLR, 而且為 dynamic link library 的時候就可以考慮使用 return to libc (因為 shellcode 無法在 stack 段執行且 gadget 數量太少很難湊出可以">
+<meta name="keywords" content="pwn">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Return to libc">
+<meta property="og:url" content="http://yojo3000.github.io/CTF/Return-to-libc/index.html">
+<meta property="og:site_name" content="Mars&#39; Blog">
+<meta property="og:description" content="source code &amp;amp; binaryvulvul.clibc.so 若發現程式開了 DEP, ASLR, 而且為 dynamic link library 的時候就可以考慮使用 return to libc (因為 shellcode 無法在 stack 段執行且 gadget 數量太少很難湊出可以執行 shell 的 rop chain) 可以使用 ldd 指令查看系統使用了哪些 l">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://yojo3000.github.io/CTF/Return-to-libc/images/1.png">
+<meta property="og:image" content="http://yojo3000.github.io/CTF/Return-to-libc/images/2.png">
+<meta property="og:image" content="http://yojo3000.github.io/CTF/Return-to-libc/images/3.png">
+<meta property="og:image" content="http://yojo3000.github.io/CTF/Return-to-libc/images/4.png">
+<meta property="og:image" content="http://yojo3000.github.io/CTF/Return-to-libc/images/5.png">
+<meta property="og:updated_time" content="2017-11-27T10:51:36.978Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Return to libc">
+<meta name="twitter:description" content="source code &amp;amp; binaryvulvul.clibc.so 若發現程式開了 DEP, ASLR, 而且為 dynamic link library 的時候就可以考慮使用 return to libc (因為 shellcode 無法在 stack 段執行且 gadget 數量太少很難湊出可以執行 shell 的 rop chain) 可以使用 ldd 指令查看系統使用了哪些 l">
+<meta name="twitter:image" content="http://yojo3000.github.io/CTF/Return-to-libc/images/1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Mars&#39; Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Mars&#39; Blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yojo3000.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Return-to-libc" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/CTF/Return-to-libc/" class="article-date">
+  <time datetime="2016-01-09T07:35:13.000Z" itemprop="datePublished">2016-01-09</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/CTF/">CTF</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Return to libc
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>source code &amp; binary<br><a href="https://drive.google.com/open?id=0BzGd3Qn1ZnTeNmU0WG9Qa0RpaGM" target="_blank" rel="noopener">vul</a><br><a href="https://drive.google.com/open?id=0BzGd3Qn1ZnTeZU1uUW9MbWJIVVE" target="_blank" rel="noopener">vul.c</a><br><a href="https://drive.google.com/open?id=0BzGd3Qn1ZnTeSkV3aUxxRzU5NDg" target="_blank" rel="noopener">libc.so</a></p>
+<p>若發現程式開了 DEP, ASLR, 而且為 dynamic link library 的時候就可以考慮使用 return to libc (因為 shellcode 無法在 stack 段執行且 gadget 數量太少很難湊出可以執行 shell 的 rop chain)</p>
+<p>可以使用 ldd 指令查看系統使用了哪些 library</p>
+<a id="more"></a>
+<p><img style="width: 700px;" src="images/1.png"></p>
+<p>readelf 指令可以查看 library function 資訊<br><img style="width: 700px;" src="images/2.png"></p>
+<p>其中 system@GLIBC_2.0 為目標 function call，前面的記憶體位置只是 offset，並不是真正的位置，由於 ASLR 會讓函式每次載入的位置隨機變化，因此若要找到 shared library 在記憶體中的真正位置必須用下列方式：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">real address = base address + offset</span><br></pre></td></tr></table></figure></p>
+<p>因此為了獲取 real address，必須 leak base address，這是 return to libc 中最重要的一步，leak address 可以透過 printf (format string)，read，write，puts (修改參數)的方式實踐，此程式則預設提供了搜尋記憶體位置的步驟，只要將任何一個程式使用到的 library function 的 got entry 位置的位址轉成 10 進位丟給程式即可獲得該位置在 runtime 的真實記憶體位置，此處以 puts 為例操作<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">objdump -d vul | less</span><br></pre></td></tr></table></figure></p>
+<p><img style="width: 700px;" src="images/3.png"></p>
+<p>此處的 0x804a01c 即為剛才提到的 got entry，再透過 readelf 獲得 puts 的 offset (要針對題目提供的 libc.so.6 做查詢，這個 libc 意指屬於該系統的 library)</p>
+<p><img style="width: 700px;" src="images/4.png"></p>
+<p>此處的 puts@@GLIBC_2.0 前面的位址即為 puts function 的 offset，將剛剛獲得的 puts real address 減去 puts offset 就可以得到 library 的 base address，再將 base address 加上 system offset 即可得到 system function 的真實位置</p>
+<p>依舊透過 buffer overflow 覆蓋 return address 成剛剛找到的 system real address，不過值得注意的是 system 還需要 /bin/sh 字串來執行 shell，這個字串可以透過 hexeditor 在 libc file 中查找即可得到該字串的 offset，一樣加上 base address 之後就可以得到真實位置，值得注意的是這個參數的擺放位置，由於 stack frame 裡面的 layout 為下圖<br><img src="images/5.png"></p>
+<p>圖片下方為 high memory address，ebp 上方為 return address 再來才是參數 (parameter)，因此最後的 payload 如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">padding +</span><br><span class="line">p32(system_address) +</span><br><span class="line">&quot;AAAA&quot; +</span><br><span class="line">p32(bin/sh_address)</span><br></pre></td></tr></table></figure></p>
+<p><a href="https://drive.google.com/open?id=0BzGd3Qn1ZnTecXgzZmZHMzFTN2s" target="_blank" rel="noopener">payload.py</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yojo3000.github.io/CTF/Return-to-libc/" data-id="cjbfvxguz000697pwelboc2p6" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pwn/">pwn</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/CTF/Bubble-Sort/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Bubble-Sort
+        
+      </div>
+    </a>
+  
+  
+    <a href="/CTF/Wireshark-Package-Analysis/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Wireshark Package Analysis</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/CTF/">CTF</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux-Server/">Linux Server</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Apache-SSL/">Apache SSL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/forensics/">forensics</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pwn/">pwn</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Apache-SSL/" style="font-size: 10px;">Apache SSL</a> <a href="/tags/forensics/" style="font-size: 10px;">forensics</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/pwn/" style="font-size: 20px;">pwn</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">June 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">May 2015</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/uncategorized/Chenk-Kung-Hill/">成功嶺新訓筆記</a>
+          </li>
+        
+          <li>
+            <a href="/CTF/Bubble-Sort/">Bubble-Sort</a>
+          </li>
+        
+          <li>
+            <a href="/CTF/Return-to-libc/">Return to libc</a>
+          </li>
+        
+          <li>
+            <a href="/CTF/Wireshark-Package-Analysis/">Wireshark Package Analysis</a>
+          </li>
+        
+          <li>
+            <a href="/CTF/Shellcode/">Shellcode</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 Mars Huang<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

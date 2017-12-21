@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Bubble-Sort | Mars&#39; Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="source code &amp;amp; binaryvulvul.clibc.so 此題一樣先設法 overflow，嘗試一次輸入 200 個字元之後發現程式雖然異常造成無限循環但是並沒有發生 segmentatioin fault，透過 peda gdb 裡面附的 checksec 查看程式開啟哪些防護，首先介紹">
+<meta name="keywords" content="pwn">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Bubble-Sort">
+<meta property="og:url" content="http://yojo3000.github.io/CTF/Bubble-Sort/index.html">
+<meta property="og:site_name" content="Mars&#39; Blog">
+<meta property="og:description" content="source code &amp;amp; binaryvulvul.clibc.so 此題一樣先設法 overflow，嘗試一次輸入 200 個字元之後發現程式雖然異常造成無限循環但是並沒有發生 segmentatioin fault，透過 peda gdb 裡面附的 checksec 查看程式開啟哪些防護，首先介紹下 gdb 的 peda 套件 peda 為 Python Exploit Develo">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://yojo3000.github.io/CTF/Bubble-Sort/images/1.png">
+<meta property="og:image" content="http://yojo3000.github.io/CTF/Bubble-Sort/images/2.png">
+<meta property="og:image" content="http://yojo3000.github.io/CTF/Bubble-Sort/images/3.png">
+<meta property="og:updated_time" content="2017-11-27T10:51:36.978Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Bubble-Sort">
+<meta name="twitter:description" content="source code &amp;amp; binaryvulvul.clibc.so 此題一樣先設法 overflow，嘗試一次輸入 200 個字元之後發現程式雖然異常造成無限循環但是並沒有發生 segmentatioin fault，透過 peda gdb 裡面附的 checksec 查看程式開啟哪些防護，首先介紹下 gdb 的 peda 套件 peda 為 Python Exploit Develo">
+<meta name="twitter:image" content="http://yojo3000.github.io/CTF/Bubble-Sort/images/1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Mars&#39; Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Mars&#39; Blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yojo3000.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Bubble-Sort" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/CTF/Bubble-Sort/" class="article-date">
+  <time datetime="2016-01-09T09:27:51.000Z" itemprop="datePublished">2016-01-09</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/CTF/">CTF</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Bubble-Sort
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>source code &amp; binary<br><a href="https://drive.google.com/open?id=0BzGd3Qn1ZnTeM0Ezc1Q4RFNqSzg" target="_blank" rel="noopener">vul</a><br><a href="https://drive.google.com/open?id=0BzGd3Qn1ZnTeTlZ1eTRpS2I4MEU" target="_blank" rel="noopener">vul.c</a><br><a href="https://drive.google.com/open?id=0BzGd3Qn1ZnTeTHRFckpfakdscDg" target="_blank" rel="noopener">libc.so</a></p>
+<p>此題一樣先設法 overflow，嘗試一次輸入 200 個字元之後發現程式雖然異常造成無限循環但是並沒有發生 segmentatioin fault，透過 peda gdb 裡面附的 checksec 查看程式開啟哪些防護，首先介紹下 gdb 的 peda 套件</p>
+<p><a style="text-decoration: underline;" href="https://github.com/longld/peda" target="_blank" rel="noopener">peda</a> 為 Python Exploit Development Assistance 的縮寫，也就是專門為了滲透測試開發的 gdb 工具，裡面包了一些好用的工具讓使用者可以在開啟 gdb 的時候直接使用，以下為操作範例</p>
+<a id="more"></a>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gdb ./vul</span><br><span class="line">checksec</span><br></pre></td></tr></table></figure>
+<p><img style="width: 700px;" src="images/1.png"></p>
+<p>裡面標註了 stack guard(canary)，NX(DEP)，PIE(tex aslr)，RELRO(got readonly or not)等等重要資訊<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gdb ./vul</span><br><span class="line">aslr</span><br></pre></td></tr></table></figure></p>
+<p><img style="width: 700px;" src="images/2.png"></p>
+<p>也可以從上述指令觀察 ASLR 是否開啟，也可以直接輸入 peda 來查詢有什麼指令可以使用<br><img style="width: 700px;" src="images/3.png"></p>
+<p>從 checksec 發現程式有 stack canary 因此直接 buffer overflow 會有問題，且有開 NX 看起來應該不是用 shellcode 來解，透過下列指令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">file vul</span><br></pre></td></tr></table></figure></p>
+<p>發現程式 library 為 dynamic link 看起來也不能直接用 ROP chain 拿到 shell，連 PIE 都開了看起來也不能 jump to code，雖然 ASLR 看起來沒開但是也沒辦法透過大量輸入導致 segmentation fault，因此這一題應該是從程式本身的邏輯錯誤這個方向來找了，可以透過原本就提供的 C file 查看原始碼，端倪在此<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">1 for(i = n ; i &gt; 0 ; i--)&#123;</span><br><span class="line">2 	 for( j = 0 ; j &lt; i ; j++)&#123;</span><br><span class="line">3 		 if(buf[j] &gt; buf[j+1])&#123;</span><br><span class="line">4 			 tmp = buf[j] ;</span><br><span class="line">5 			 buf[j] = buf[j+1];</span><br><span class="line">6 			 buf[j+1] = tmp ;</span><br><span class="line">7 		 &#125;</span><br><span class="line">8 	 &#125;</span><br><span class="line">9 &#125;</span><br></pre></td></tr></table></figure></p>
+<p>發現第 5 和 6 行中當 j 在最大值時會和下一個不應該被交換的位置做交換動作，發現可以透過該方式 leak 出 stack 之後位置的值，判斷可從該處 leak stack canary，可以透過將輸入值調整為極大值 (由於原始碼定義的資料結構為 unsign int，因此輸入負值就可以創造極大值) 就可以將 [j+1] 的數值推到 stack 的最前面用來當做 leak 的工具，另外也可以透過調整輸入值為很小的數值來將特定數值推到最後面的 [j+1] 來還原 stack canary 躲過 stack guard 檢查，而在 return address 的位置則透過 return to libc 跳至 system 執行即可拿到 shell。<br><a href="https://drive.google.com/open?id=0BzGd3Qn1ZnTeZkJ5bkU4UzhLWE0" target="_blank" rel="noopener">payload</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yojo3000.github.io/CTF/Bubble-Sort/" data-id="cjbfvxgui000597pwddhtk9ju" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pwn/">pwn</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/uncategorized/Chenk-Kung-Hill/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          成功嶺新訓筆記
+        
+      </div>
+    </a>
+  
+  
+    <a href="/CTF/Return-to-libc/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Return to libc</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/CTF/">CTF</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux-Server/">Linux Server</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Apache-SSL/">Apache SSL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/forensics/">forensics</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pwn/">pwn</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Apache-SSL/" style="font-size: 10px;">Apache SSL</a> <a href="/tags/forensics/" style="font-size: 10px;">forensics</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/pwn/" style="font-size: 20px;">pwn</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">June 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">May 2015</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/uncategorized/Chenk-Kung-Hill/">成功嶺新訓筆記</a>
+          </li>
+        
+          <li>
+            <a href="/CTF/Bubble-Sort/">Bubble-Sort</a>
+          </li>
+        
+          <li>
+            <a href="/CTF/Return-to-libc/">Return to libc</a>
+          </li>
+        
+          <li>
+            <a href="/CTF/Wireshark-Package-Analysis/">Wireshark Package Analysis</a>
+          </li>
+        
+          <li>
+            <a href="/CTF/Shellcode/">Shellcode</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 Mars Huang<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

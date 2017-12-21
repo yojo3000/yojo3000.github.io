@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Apache_configure_https | Mars&#39; Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="先來介紹一下 https 吧！https 就是 http 加上 SSL/TSL 協訂 為什麼要額外加上協定呢？因為單純的 http 為”明文”傳輸，意思就是傳輸的資料沒有經過加密處理，因此一旦傳輸敏感資料 (密碼，個資) 時若被截取傳輸封包 (e.g.: 區域網路) 就能看到原始資料，若加上了 SSL/TSL 協訂就可">
+<meta name="keywords" content="Apache SSL">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Apache_configure_https">
+<meta property="og:url" content="http://yojo3000.github.io/Linux-Server/Apache-configure-https/index.html">
+<meta property="og:site_name" content="Mars&#39; Blog">
+<meta property="og:description" content="先來介紹一下 https 吧！https 就是 http 加上 SSL/TSL 協訂 為什麼要額外加上協定呢？因為單純的 http 為”明文”傳輸，意思就是傳輸的資料沒有經過加密處理，因此一旦傳輸敏感資料 (密碼，個資) 時若被截取傳輸封包 (e.g.: 區域網路) 就能看到原始資料，若加上了 SSL/TSL 協訂就可在安全的傳輸通道上交換資料  (注意！https 的加密是在傳輸層加密而非對資料">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://yojo3000.github.io/Linux-Server/Apache-configure-https/images/https(1).jpg">
+<meta property="og:updated_time" content="2017-11-27T10:51:36.974Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Apache_configure_https">
+<meta name="twitter:description" content="先來介紹一下 https 吧！https 就是 http 加上 SSL/TSL 協訂 為什麼要額外加上協定呢？因為單純的 http 為”明文”傳輸，意思就是傳輸的資料沒有經過加密處理，因此一旦傳輸敏感資料 (密碼，個資) 時若被截取傳輸封包 (e.g.: 區域網路) 就能看到原始資料，若加上了 SSL/TSL 協訂就可在安全的傳輸通道上交換資料  (注意！https 的加密是在傳輸層加密而非對資料">
+<meta name="twitter:image" content="http://yojo3000.github.io/Linux-Server/Apache-configure-https/images/https(1).jpg">
+  
+    <link rel="alternate" href="/atom.xml" title="Mars&#39; Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Mars&#39; Blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yojo3000.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Apache-configure-https" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/Linux-Server/Apache-configure-https/" class="article-date">
+  <time datetime="2015-06-16T10:10:37.000Z" itemprop="datePublished">2015-06-16</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Linux-Server/">Linux Server</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Apache_configure_https
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>先來介紹一下 https 吧！https 就是 http 加上 SSL/TSL 協訂</p>
+<p>為什麼要額外加上協定呢？因為單純的 http 為”明文”傳輸，意思就是傳輸的資料沒有經過加密處理，因此一旦傳輸敏感資料 (密碼，個資) 時若被截取傳輸封包 (e.g.: 區域網路) 就能看到原始資料，若加上了 SSL/TSL 協訂就可在安全的傳輸通道上交換資料 </p>
+<p>(注意！https 的加密是在傳輸層加密而非對資料本身加密)，近年來資訊安全意識提升，絕大多數的企業及政府單位網站都會使用 https 以確保資訊安全</p>
+<a id="more"></a>
+<p>傳輸資料不只一種方式，除了透過 http 協訂之外也可能透過 ftp，telnet 等等其他協訂傳輸資料，而這些協訂同樣是以明文傳輸，因此相對應的加上 SSL/TSL 的新協定也存在<br>e.g.: ftp + SSL =&gt; ftps，pop3 + SSL =&gt; pop3s<br><br></p>
+<p><hr style="border: 2px dotted #0099CC;"><br><em>註:<br> SSL 是網路傳輸層的安全協訂，TSL 可視為新版的 SSL<br>會以 SSL/TSL 統一稱之，兩者為同一協訂在不同階段的產物<br><br>目前文字介面傳輸多以 SSH 取代 Telnet 協訂<br><br>ftps 和 sftp 是兩個不一樣的概念<br>ftps 為加上 SSL 的 ftp 協訂<br>而 sftp 為利用 ssh 實做 ftp 傳輸功能的協訂<br><br>OpenSSL 為開放原始碼的 SSL/TSL 函式庫套件<br>實做了 SSL 之加密功能，可製作傳輸金鑰</em></p>
+<hr style="border: 2px dotted #0099CC;">
+
+<p>大概了解什麼是 https 之後就來談談加密實現的方式，https 的加密方式也就是 SSL 的加密方式，透過公鑰加密系統加密。</p>
+<p>加密大致上可分成兩種實現方式<br>1. 密鑰加密(Secret-Key CryptoSystem)或稱對稱式密碼系統<br>2. 公鑰加密(Public-Key Cryptosystem)或稱非對稱式密碼系統<br>加密希望達成的目的有:<br>1. 不希望資料傳輸的過程中洩漏原始資料<br>2. 確保收送雙方的身分正確<br><br>而 “密鑰加密” 的概念可以想像成把資料用大鎖鎖住，傳送和接收兩方分別擁有 <span style="color: red;">“兩支一樣的鑰匙”</span> 適用於該大鎖 (對稱式金鑰) ，但是這種加密方式有一種潛在問題，除非一開始收送兩方均有密鑰，否則送方就得將密鑰傳送給收方，但是傳送的過程中密鑰可能會被中途竊取<br>公鑰加密就能減少上述情形發生，該系統產生<span style="color: red;">一對公鑰 (可公開) 及私鑰 (不可公開) </span>，該成對的兩把鑰匙只有對方可以加 / 解密自己解 / 加密的資料<br>假設 A 為資料發送者，B 為資料接收者，A 利用對 B 的公鑰 Kp 加密資料，A 收到後用相對應的私鑰 Ks 解密，如此一來傳輸的過程中就不需要發送金鑰，只要能確保私鑰沒有外流，就可以保證加密資料在傳輸過程中不會洩漏原始資料。</p>
+<p>但是公開的公鑰還是有風險，惡意的第三者可能在取得公鑰後假裝自己是該公鑰的主人發送偽造請求，因此為了判定資料發送者的身分，會在傳送的資料上加入數位簽章判定，數位簽章裡面包含了發送者的個人資訊用以證明身分，但是個人身分一樣可以偽造，因此就會透過第三方的認證機構來確保數位憑證的真實性 (Certificate Authority) (CA) ，而電子簽章也是目前電子商務能存在的基礎。</p>
+<p>電子簽章的實做方式和公鑰加密系統正好相反，發送者透過自己的私鑰將憑證加密，這樣可以達到:<br>1. 任何人 (包括接收者和所有知道公鑰的第三者) 均可以驗證發送者的身分<br>2. 因為發送者的私鑰只有自己知道，因此沒辦法偽造簽名<br>3. 每次傳送中的簽名只能使用一次，因此攔截封包取得簽名並無法再次使用</p>
+<p>接收者在收到發送者帶有電子簽章的資料後就可以向公正的第三者 (CA) 驗證該電子簽名是否已經註冊 (付錢) ，若該簽證並無向 CA 註冊，則會回傳不信任的認證。<br>e.g.: 瀏覽器連接網站時有時會警告使用者<br><img style="width: 700px;" src="images/https(1).jpg"></p>
+<p><hr style="border: 2px dotted #0099CC;"><br><em>註:<br> 2015年初 chrome 和 firefox 宣布不再信任中國的數位憑證，因為中國互連網絡信息中心 (CNNIC) 濫發數位憑證，自此之後若是連上採用 CNNIC 憑證或是域名結尾為 .cn 的簡體中文會看到瀏覽器的警告訊息。</em></p>
+<p><hr style="border: 2px dotted #0099CC;"><br><br></p>
+<p>現在以 Linux (CentOs) 為例<br>將 Web Server (Apache) 中的 http 協訂 (80 port) + SSL 變成 <br>https 協訂 (443 port)</p>
+<p><span style="color: red;">目前假設已經有一個成功使用 http 的網站及 apache web server<br>所以從無到有架設網站的過程就不在此提及</span><br>首先安裝 OpenSSL 及 apache 的 OpenSSL interface (mod_ssl)<br>(以下指令有必要的話請加上 sudo)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install mod_ssl openssl</span><br></pre></td></tr></table></figure></p>
+<p>(某些版本以上的 apache 可能已經預設安裝，反正結果會顯示在 terminal)</p>
+<p>接著產生私鑰 (private key)，底下的 “路徑” 項目若留空白則預設為目前路徑<br>而 2048 為產生私鑰的位元長度，預設使用 RSA 加密產生<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl genrsa -out &quot;路徑&quot; &quot;檔名&quot;.key 2048</span><br></pre></td></tr></table></figure></p>
+<p>接著利用剛剛產生的私鑰建立憑證請求檔案 (.csr)，若是想向 CA 註冊憑證就要將該檔案上傳給 CA<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl req -new -key &quot;檔名&quot;.key -out &quot;檔名&quot;.csr</span><br></pre></td></tr></table></figure></p>
+<p>產生上述檔案會要求輸入各種資料當做憑證的內容<br>例如國碼，省別，組織名稱等等，將這些基本資料打包成 CSR 檔案上傳至 CA 並且付款之後就成功註冊了<br>e.g.: <a style="text-decoration: underline;" href="http://www.twca.com.tw" target="_blank" rel="noopener">台灣網路憑證 (TWCA)</a><br>詳細網頁操作可參考<a style="text-decoration: underline;" href="files/Apache_SSL_doc.pdf">此檔案</a></p>
+<p>上傳之後等待 CA 審核完畢就會寄送認證檔案 (.cer or .crt) 給申請者，拿到之後就可以在 Apache 上安裝憑證，將憑證，私鑰，和憑證請求檔分別複製到以下位置<br>伺服器憑證檔常常為 server.cer<br>中繼憑證檔常常為 uca.cer<br>可能會拿到 uca_1 和 uca_2，合併方式可參考上面連結</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cp server.cer(or crt) /etc/pki/tls/certs</span><br><span class="line">cp &quot;檔名&quot;.key /etc/pki/tls/private</span><br><span class="line">cp &quot;檔名&quot;.csr /etc/pki/tls/private</span><br><span class="line">cp uca.cer /etc/pki/tls/certs</span><br></pre></td></tr></table></figure>
+<p><hr style="border: 2px dotted #0099CC;"><br><em>註:<br>認證檔案 .crt 和 .cer 檔基本上可以視為一樣的東西，用於存放電子憑證，也可以互相轉換，</em></p>
+<hr style="border: 2px dotted #0099CC;">
+
+
+<p>將上述檔案放在正確的位置之後，就可以修改 apache 底下的 <span style="color: red;">ssl.conf</span> 檔案<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi +/SSLCertificateFile /etc/httpd/conf.d/ssl.conf</span><br></pre></td></tr></table></figure></p>
+<ol>
+<li>找到 SSLCertificateFile 這行<br>將憑證的路徑改為 /etc/pki/tls/certs/“檔名”.crt<br><br>2. 找到 SSLCertificateKeyFile 這行<br>將私鑰路徑改為 /etc/pki/tls/private/“檔名”.key<br><br>3. 找到 SSLCertificateChainFile 這行<br>將路徑改為 /etc/pki/tls/certs/uca.cer<br><br>4. 找到 #SSLEngine on 這行，將註解去掉開啟 SSLEngine<br><br>5. 找到 #Listen 443 這行，將註解去掉 (https 使用 443 port)</li>
+</ol>
+<p>接著編輯 /etc/httpd/conf/<span style="color: red;">httpd.conf</span><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">1. 將文件中的</span><br><span class="line">    #LoadModule ssl_module modules/mod_ssl.so</span><br><span class="line">的註解拿掉</span><br><span class="line">(使用一開始安裝的 OpenSSL interface -- mod_ssl)</span><br><span class="line"></span><br><span class="line">2. 將文件中的</span><br><span class="line">    #Include /etc/httpd/conf.d/*.conf</span><br><span class="line">的註解拿掉</span><br><span class="line">讓 apache 載入 conf.d 裡面的所有 conf 檔案的設定</span><br><span class="line">當然也包含剛剛編輯的 ssl.conf</span><br></pre></td></tr></table></figure></p>
+<p><br></p>
+<p><hr style="border: 2px dotted #0099CC;"><br><em>註:<br>apache 服務在不同的 Linux 中可能有不同的稱呼或是資料夾名稱<br>e.g.: 在 Ubuntu 中稱作 apache2，在 CentOs 中稱作 httpd<br><br>.conf 檔是 apache 的設定檔，httpd.conf 是最主要的設定檔，也可以在其他目錄寫客製化的其他設定檔 test.conf，然後再到 httpd.conf 中 Include 該 conf 檔案</em></p>
+<hr style="border: 2px dotted #0099CC;">
+
+
+<p>設定完 apache 之後要確認一下防火牆 (iptable) 裡面是不是有開放 443 port<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/sysconfig/iptables</span><br></pre></td></tr></table></figure></p>
+<p>開啟 443 port 最簡單的方式就是複製 80 port 的設定，然後把 80 改成 443 即可開放 443 port 對外連線</p>
+<p>最後重新開啟 apache<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service httpd restart</span><br></pre></td></tr></table></figure></p>
+<p>並且在瀏覽器網址列輸入 <a href="https://&quot;your_website_link" target="_blank" rel="noopener">https://&quot;your_website_link</a>“ 即可<br>(注意！若憑證檔案非 CA 所提供的，瀏覽器一樣會判定為不信任的認證，也會出現上面的安全憑證問題頁面！)</p>
+<p>最後<br>可以在 apache 中加上規則強迫使用者透過 https 連線<br>(不然弄 ssl 就沒有意義了)，編輯 httpd.conf 檔案<br><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/httpd/conf/httpd.conf</span><br></pre></td></tr></table></figure></p>
+<p>在 80 port 的 VirtualHost 中加上重新導向<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;VirtualHost *:80&gt;</span><br><span class="line">   Redirect permanent / https://yourWebSite/</span><br><span class="line">&lt;/VirtualHost&gt;</span><br></pre></td></tr></table></figure></p>
+<p>如此一來當使用者連結  http (80 port) 時就會被自動導向至  https 囉<br>如果 httpd.conf 中沒有 VirtualHost 標籤的話就自己寫吧</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yojo3000.github.io/Linux-Server/Apache-configure-https/" data-id="cjbfvxgtn000297pwz5owalwz" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Apache-SSL/">Apache SSL</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/CTF/ROP-Return-Oriented-Programming/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          ROP (Return Oriented Programming)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/CTF/defcon-babycmd/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">defcon_babycmd</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/CTF/">CTF</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux-Server/">Linux Server</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Apache-SSL/">Apache SSL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/forensics/">forensics</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pwn/">pwn</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Apache-SSL/" style="font-size: 10px;">Apache SSL</a> <a href="/tags/forensics/" style="font-size: 10px;">forensics</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/pwn/" style="font-size: 20px;">pwn</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">June 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">May 2015</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/uncategorized/Chenk-Kung-Hill/">成功嶺新訓筆記</a>
+          </li>
+        
+          <li>
+            <a href="/CTF/Bubble-Sort/">Bubble-Sort</a>
+          </li>
+        
+          <li>
+            <a href="/CTF/Return-to-libc/">Return to libc</a>
+          </li>
+        
+          <li>
+            <a href="/CTF/Wireshark-Package-Analysis/">Wireshark Package Analysis</a>
+          </li>
+        
+          <li>
+            <a href="/CTF/Shellcode/">Shellcode</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 Mars Huang<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

